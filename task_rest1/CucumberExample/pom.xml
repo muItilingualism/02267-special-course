@@ -72,5 +72,23 @@
 			<version>5.5.0</version>
 			<scope>test</scope>
 		</dependency>
+        <!-- General REST framework -->
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-client</artifactId>
+            <version>6.2.6.Final</version>
+        </dependency>
+        <!-- Serializer to and from JSON -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-resteasy-jsonb</artifactId>
+            <version>3.6.4</version>
+        </dependency>
+        <!-- Serializer to and from XML -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-resteasy-jaxb</artifactId>
+            <version>3.6.4</version>
+        </dependency>
 	</dependencies>
 </project>

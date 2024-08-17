@@ -28,7 +28,7 @@ public class SimpleDTUPaySteps {
 
     @When("the merchant initiates a payment for {int} kr by the customer")
     public void theMerchantInitiatesAPaymentForKrByTheCustomer(int amount) {
-        successful = dtuPay.pay(amount, cid, mid);
+        successful = dtuPay.pay(amount, this.cid, this.mid);
     }
 
     @Then("the payment is successful")

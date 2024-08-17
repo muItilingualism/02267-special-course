@@ -1,10 +1,8 @@
 package org.acme;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.acme.model.Payment;
 
+import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -16,32 +14,31 @@ import jakarta.ws.rs.core.Response;
 @Path("/payment")
 public class PaymentResource {
 
-    List<Payment> list = new ArrayList<>();
-    String customerId = "cid1";
-    String merchantId = "mid1";
+    @Inject
+    PaymentService paymentService;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response payment(Payment payment) {
-        if (!payment.getCustomerId().equals(this.customerId)) {
+        if (!paymentService.isValidCustomer(payment.getCustomerId())) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("customer with id " + payment.getCustomerId() + " is unknown")
                     .build();
         }
 
-        if (!payment.getMerchantId().equals(this.merchantId)) {
+        if (!paymentService.isValidMerchant(payment.getMerchantId())) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("merchant with id " + payment.getMerchantId() + " is unknown")
                     .build();
         }
 
-        list.add(payment);
+        paymentService.savePayment(payment);
         return Response.ok().build();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response list() {
-        return Response.ok(this.list).build();
+        return Response.ok(paymentService.getAllPayments()).build();
     }
 }

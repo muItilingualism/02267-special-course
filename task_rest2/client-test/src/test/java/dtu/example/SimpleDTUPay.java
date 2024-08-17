@@ -1,6 +1,11 @@
 package dtu.example;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import dtu.example.model.Payment;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
@@ -21,5 +26,20 @@ public class SimpleDTUPay {
         response.close();
 
         return response.getStatus() == 200;
+    }
+
+    public List<Payment> list() {
+        Client client = ClientBuilder.newBuilder().build();
+        WebTarget target = client.target("http://localhost:8080/payment");
+
+        String response = target.request(MediaType.APPLICATION_JSON).get(String.class);
+
+        Jsonb jsonb = JsonbBuilder.create();
+        List<Payment> list = jsonb.fromJson(response, new ArrayList<Payment>() {
+        }.getClass().getGenericSuperclass());
+
+        client.close();
+
+        return list;
     }
 }

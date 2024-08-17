@@ -1,6 +1,7 @@
 package dtu.example;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -34,13 +35,13 @@ public class SimpleDTUPaySteps {
 
     @Then("the payment is successful")
     public void thePaymentIsSuccessful() {
-        assertTrue(response.getStatusCode() == 200);
+        assertTrue(response.isSuccessful());
     }
 
     @Given("a successful payment of {int} kr from customer {string} to merchant {string}")
     public void aSuccessfulPaymentOfKrFromCustomerToMerchant(int amount, String customerId, String merchantId) {
         response = dtuPay.pay(amount, customerId, merchantId);
-        assertTrue(response.getStatusCode() == 200);
+        assertTrue(response.isSuccessful());
     }
 
     @When("the manager asks for a list of payments")
@@ -60,7 +61,7 @@ public class SimpleDTUPaySteps {
 
     @Then("the payment is not successful")
     public void thePaymentIsNotSuccessful() {
-        assertTrue(this.response.getStatusCode() != 200);
+        assertFalse(this.response.isSuccessful());
     }
 
     @Then("an error message is returned saying {string}")

@@ -9,8 +9,8 @@ public class PaymentResult {
         this.message = message;
     }
 
-    public int getStatusCode() {
-        return statusCode;
+    public boolean isSuccessful() {
+        return statusCode == 200;
     }
 
     public String getMessage() {

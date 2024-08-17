@@ -1,0 +1,33 @@
+<<decl
+author := HTMLAuthors new add: (HTMLAuthor new name: 'Hubert Baumeister'; homePage: 'http://www.compute.dtu.dk/~huba'); yourself.
+title := '<center><h2>Bank Service FastMoney</h2></center> '.
+"style := PSTHStyle new."
+"background := 'http://www.pst.informatik.uni-muenchen.de/images/icons/pst.gif'."
+"bgcolor := '#f1f1f1'."
+style := FancyStyle new
+>>
+\begin{document}
+%\isHTML
+%\documenttitle{FastMoney Bank Service}
+%\documenttoplevel{section}
+%\sectionlevel{0}{f}{Contents}
+%\htmlLabel{1}
+This is the Web site of the FastMoney Bank. The bank offers a legacy interface to its services as a set of SOAP Web services. These are described in a WSDL (Web Service Description Language) file accessible via \htmlRef{'http://---host---:---port---/BankService.wsdl.xml'}{http://---host---:---port---/BankService.wsdl.xml}. Java 8 comes with tools to generate client stubs from WSDL files, like <em>wsimport</em>. You can also use Eclipse to generate the client stubs using <em>wsdl2java</em>, again requiring Java 8.  Note that Java 11 does not contain these tools anymore.
+
+The functions offered by the bank are:
+<ul>
+   <li><em>create account</em>. Input are the first- and last name of the user and his/her CPR number together with the initial balance of the account. Note that the accounts cannot have a negative value. The service returns an account identifier or a failure if the account already exists.
+   <li><em>get account:</em> Input is an account identifier, and an account is returned if the the account exists, otherwise a failure message is returned.
+   <li><em>get accounts.</em> Get accounts does not have an argument and returns informationa of all accounts of the bank. This function is helpful to find accounts one needs to delete.
+   <li><em>delete account.</em> The argument is again an account identifier, and the result is nothing if the account could be deleted or an error message that the account didn't exists.
+   <li><em>transfer money.</em> An amount of money is transfered from an account identified by an account identifier to another account identified by an account identifier. As the 4th parameter, a text describing the the purpose of the transaction is required. The service returns a failure if the amount is negative, the final balance of the from account would be negative, and if some information is missing.
+   <li><em>get account by CPR number:</em> Return the account that belongs to a a user with a given CPR number. If there is no such account, an error message is returned.
+</ul>
+
+When you use the bank for (automated) testing, make sure that you clean up after your tests. This is best done by remembering which accounts you have created within a test and then deleting these accounts again. Otherwise, your tests might fail when running them again.
+
+The bank provides some \htmlRef{'tools.zip'}{command line tools} for testing. These need to have <em>\htmlRef{'http://curl.haxx.se'}{curl}</em> and <em>\htmlRef{'https://stedolan.github.io/jq/download/'}{jq}</em> installed (available for Windows, Linux, and Mac), and are provided as bash-scripts. To run them on Windows, you can either use the new Unix subsystem of Windows 10 or you can install \htmlRef{'http://www.cygwin.org'}{cygwin}, consisting of a set of Linux tools ported to Windows. You get information how to run each shell script by running it with the argument -h, e.g., <em>"createAccount -h"</em>
+
+The bank has also a REST interface (used by the command line tools). The interface is described in the following \htmlRef{'http://---host---:---port---/bank.yaml'}{Swagger file} and can be used with the online editor at \htmlRef{'http://editor.swagger.io'}{http://editor.swagger.io}. Note that calling the REST services through that interface does not work. Instead, use the curl commands. Those should work.
+
+\end{document}

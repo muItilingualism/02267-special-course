@@ -1,0 +1,31 @@
+#!/bin/tcsh -f
+if (($1 == "-h")) then
+   echo "Usage: `basename $0`"
+   exit 
+endif
+
+if ($# == 1) then
+	setenv bankServer $1
+endif
+
+setenv account1 `./createAccount  1000 cpr12 user1 user1`
+echo Account 1: $account1
+
+setenv account2 `./createAccount  1000 cpr22 user2 user2`
+echo Account 2: $account2
+
+./transferMoney  100 $account1 $account2 "Food in the supermarket"
+./transferMoney  13.50 $account1 $account2 "Food in the supermarket"
+./transferMoney  50.10 $account2 $account1 "Food in the supermarket"
+
+echo Get all accounts
+./listAccounts 
+
+echo Get details account $account1
+./getAccount  $account1
+
+echo Get details account $account2
+./getAccount  $account2
+
+./deleteAccount  $account1
+./deleteAccount  $account2

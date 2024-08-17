@@ -1,0 +1,30 @@
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+             http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd" version="2.1">
+
+  <persistence-unit name="bank" transaction-type="RESOURCE_LOCAL">
+  	<description>Hibernate JPA Configuration Example</description>
+    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+    <class>dtu.ws.fastmoney.Account</class>
+    <class>dtu.ws.fastmoney.Transaction</class>
+    <class>dtu.ws.fastmoney.User</class>
+    <properties>
+      <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://db:3306/bank?autoReconnect=true"/>
+      <!-- <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/bank"/> -->
+      <property name="javax.persistence.jdbc.user" value="root" />
+      <property name="javax.persistence.jdbc.password" value="hubert" />
+      <property name="hibernate.show_sql" value="true" />
+     <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect"/>
+      <property name="hibernate.hbm2ddl.auto" value="update" />
+          <!-- Configuring Connection Pool -->
+    <property name="hibernate.c3p0.min_size" value="5" />
+    <property name="hibernate.c3p0.max_size" value="20" />
+    <property name="hibernate.c3p0.timeout" value="500" />
+    <property name="hibernate.c3p0.max_statements" value="50" />
+    <property name="hibernate.c3p0.idle_test_period" value="2000" />
+    </properties>
+
+  </persistence-unit>
+
+</persistence>
+

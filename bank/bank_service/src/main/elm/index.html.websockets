@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>GPS Tracker</title>
+  <!-- <link rel="stylesheet" href="whatever-you-want.css"> -->
+  <script src="main.js"></script>
+</head>
+<div id="elm"></div>
+
+<body>
+  <script>
+    var app = Elm.Main.init({ node: document.getElementById("elm") });
+//    var ws = new WebSocket("ws://165.22.18.206:8080//gpsdata");
+    var ws = new WebSocket("ws://localhost:8080//gpsdata");
+    ws.onmessage = function (message) {
+      console.log(message);
+      app.ports.onMessage.send(JSON.stringify({ ws: ws.url, data: message.data, timeStamp: message.timeStamp }));
+    };
+    // ws.onopen = function (message) {
+    //   console.log(message);
+    //   app.ports.onOpen.send(JSON.stringify({ data: message.data, timeStamp: message.timeStamp }));
+    // };
+    // ws.onclose = function (message) {
+    //   console.log(message);
+    //   app.ports.onClose.send(JSON.stringify({ data: message.data, timeStamp: message.timeStamp }));
+    // };
+    // ws.onerror = function (message) {
+    //   console.log(message);
+    //   app.ports.onError.send(JSON.stringify({ data: message.data, timeStamp: message.timeStamp }));
+    // };
+    // app.ports.send.subscribe(function (msg) { ws.send(msg); });
+  </script>
+</body>
+
+</html>

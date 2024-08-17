@@ -1,0 +1,17 @@
+version: '3'
+services:
+  bank:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: bank 
+    container_name: bank
+    hostname: ---host---
+    ports:
+     - "---port---:---port---"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "4"
+    

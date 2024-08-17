@@ -1,0 +1,31 @@
+version: '3'
+services:
+  db: 
+    image: mysql/mysql-server
+    container_name: db
+    hostname: db
+    ports: 
+     - "3306:3306"
+    environment:
+     - MYSQL_ROOT_HOST=%
+     - MYSQL_ROOT_PASSWORD=hubert
+    volumes:
+     - bankdb:/var/lib/mysql
+  bank:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: bank 
+    container_name: bank
+    hostname: localhost
+    ports:
+     - "8080:8080"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "4"
+
+volumes:
+  bankdb:
+    

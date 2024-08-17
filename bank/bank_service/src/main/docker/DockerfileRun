@@ -1,0 +1,14 @@
+FROM eclipse-temurin:11 as jre-build
+# RUN apt update \
+#    && apt -yq install python3 \
+#    && ln -s /usr/bin/python3 /usr/local/bin/python3 \
+#    && apt -yq install python3-pip \
+#    && pip3 install simplekml
+RUN apt update \
+    && apt -yq install python3 \
+    && ln -s /usr/bin/python3 /usr/local/bin/python3
+WORKDIR /usr/src/gpsproject/tracker
+# WORKDIR /usr/src
+# COPY kml2.py /usr/src/
+# COPY simplekml /usr/src
+# COPY f /usr/src

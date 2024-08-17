@@ -1,0 +1,7 @@
+#!/bin/bash
+if [[ $1 = -h ]] || [ ! $# -eq 4 ]
+then
+    echo "Usage: `basename $0` amount fromAccountId toAccountId description"
+   exit 0
+fi
+curl -s -X POST "http://localhost:8080/rest/payments" -H  "accept: text/plain" -H  "Content-Type: application/json" -d "{  \"amount\": $1,  \"creditor\": \"$3\",  \"debtor\": \"$2\", \"description\": \"$4\"}"

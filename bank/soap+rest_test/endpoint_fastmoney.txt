@@ -1,0 +1,1 @@
+http://fastmoney.compute.dtu.dk:8080/bank_service-0.0.1-SNAPSHOT/BankServiceService

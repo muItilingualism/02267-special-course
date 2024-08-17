@@ -1,0 +1,170 @@
+swagger: '2.0'
+info:
+  version: v1.0
+  title: Bank Service
+host: '---host---:---port---'
+basePath: /rest
+schemes:
+  - http
+paths:
+  /accounts:
+    get:
+      consumes: []
+      produces:
+        - application/json
+        - text/plain
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          schema:
+            $ref: '#/definitions/AccountInfo'
+    post:
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/CreateAccountData'
+      responses:
+        '201':
+          description: Created
+          headers:
+            Location:
+              type: string
+        '400':
+          description: Bad Request
+          headers: {}
+          schema:
+            type: string
+        '500':
+          description: Internal Server Error
+          headers: {}
+          schema:
+            type: string
+  '/accounts/{id}':
+    get:
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - type: string
+          name: id
+          in: path
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          schema:
+            $ref: '#/definitions/Account'
+        '404':
+          description: Not Found
+          headers: {}
+          schema:
+            $ref: '#/definitions/ErrorType'
+    delete:
+      consumes: []
+      produces:
+        - text/plain
+      parameters:
+        - type: string
+          name: id
+          in: path
+          required: true
+      responses:
+        '204':
+          description: No Content
+          headers: {}
+        '404':
+          description: Not Found
+          headers: {}
+          schema:
+            type: string
+  /payments:
+    post:
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/PaymentData'
+      responses:
+        '204':
+          description: No Content
+          headers: {}
+        '400':
+          description: Bad Request
+          headers: {}
+          schema:
+            type: string
+definitions:
+  Account:
+    properties:
+      balance:
+        type: number
+      id:
+        type: string
+      transactions:
+        $ref: '#/definitions/Transaction'
+      user:
+        $ref: '#/definitions/User'
+  AccountInfo:
+    properties:
+      accountId:
+        type: string
+      user:
+        $ref: '#/definitions/User'
+  CreateAccountData:
+    properties:
+      balance:
+        type: number
+      user:
+        $ref: '#/definitions/User'
+  ErrorType:
+    properties:
+      errorMessage:
+        type: string
+  PaymentData:
+    properties:
+      amount:
+        type: number
+      creditor:
+        type: string
+      debtor:
+        type: string
+      description:
+        type: string
+  Transaction:
+    properties:
+      amount:
+        type: number
+      balance:
+        type: number
+      creditor:
+        type: string
+      debtor:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      time:
+        type: object
+  User:
+    properties:
+      cprNumber:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string

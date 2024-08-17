@@ -25,15 +25,27 @@ in pkgs.mkShell {
     customVSCode
     jdk17
     maven
+    zip
+    docker
+    docker-compose
+    rootlesskit
   ];
 
   shellHook = ''
     export JAVA_HOME=${pkgs.jdk17}/lib/openjdk
     export PATH=$JAVA_HOME/bin:$PATH
 
+    # Docker seems to look in /var/run/docker.sock for the daemon (at least on NixOS),
+    # but without root it runs in /run/user/<userid>.
+    # see: https://discourse.nixos.org/t/is-there-a-way-to-run-docker-inside-a-nix-shell/46824/2
+    export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/docker.sock
+
     echo "Dev environment ready."
     echo "JDK: $(java -version 2>&1 | head -n 1)"
     echo "Maven: $(mvn --version | head -n 1)"
+    echo "Docker: $(docker --version)"
+    echo "Docker Compose: $(docker-compose --version)"
     echo "Run 'code .' to open vscode in the current directory."
+    echo "Run './build_deploy_test.sh localhost 8081' in 'bank/bank_service/' to start the bank service"
   '';
 }

@@ -1,0 +1,1 @@
+http://localhost:8080/bank_service/BankServiceService

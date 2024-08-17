@@ -1,0 +1,252 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://fastmoney.ws.dtu/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="BankServiceService" targetNamespace="http://fastmoney.ws.dtu/">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://fastmoney.ws.dtu/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://fastmoney.ws.dtu/">
+  <xs:element name="createAccountWithBalance" type="tns:createAccountWithBalance"/>
+  <xs:element name="createAccountWithBalanceResponse" type="tns:createAccountWithBalanceResponse"/>
+  <xs:element name="getAccount" type="tns:getAccount"/>
+  <xs:element name="getAccountByCprNumber" type="tns:getAccountByCprNumber"/>
+  <xs:element name="getAccountByCprNumberResponse" type="tns:getAccountByCprNumberResponse"/>
+  <xs:element name="getAccountResponse" type="tns:getAccountResponse"/>
+  <xs:element name="retireAccount" type="tns:retireAccount"/>
+  <xs:element name="retireAccountResponse" type="tns:retireAccountResponse"/>
+  <xs:element name="transferMoneyFromTo" type="tns:transferMoneyFromTo"/>
+  <xs:element name="transferMoneyFromToResponse" type="tns:transferMoneyFromToResponse"/>
+  <xs:complexType name="getAccount">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="account_id" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getAccountResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:account"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="account">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="balance" type="xs:decimal"/>
+      <xs:element minOccurs="0" name="id" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="transactions" nillable="true" type="tns:transaction"/>
+      <xs:element minOccurs="0" name="user" type="tns:user"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="transaction">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="amount" type="xs:decimal"/>
+      <xs:element minOccurs="0" name="balance" type="xs:decimal"/>
+      <xs:element minOccurs="0" name="creditor" type="xs:string"/>
+      <xs:element minOccurs="0" name="debtor" type="xs:string"/>
+      <xs:element minOccurs="0" name="description" type="xs:string"/>
+      <xs:element minOccurs="0" name="time" type="xs:dateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="user">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="cprNumber" type="xs:string"/>
+      <xs:element minOccurs="0" name="firstName" type="xs:string"/>
+      <xs:element minOccurs="0" name="lastName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="createAccountWithBalance">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="user" type="tns:user"/>
+      <xs:element minOccurs="0" name="balance" type="xs:decimal"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="createAccountWithBalanceResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getAccountByCprNumber">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="cpr" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getAccountByCprNumberResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:account"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="retireAccount">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="account_id" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="retireAccountResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="transferMoneyFromTo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="debtor" type="xs:string"/>
+      <xs:element minOccurs="0" name="creditor" type="xs:string"/>
+      <xs:element minOccurs="0" name="amount" type="xs:decimal"/>
+      <xs:element minOccurs="0" name="description" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="transferMoneyFromToResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:element name="BankServiceException" type="tns:BankServiceException"/>
+  <xs:complexType name="BankServiceException">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="errorMessage" type="xs:string"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="retireAccountResponse">
+    <wsdl:part element="tns:retireAccountResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAccount">
+    <wsdl:part element="tns:getAccount" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAccountByCprNumber">
+    <wsdl:part element="tns:getAccountByCprNumber" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="BankServiceException">
+    <wsdl:part element="tns:BankServiceException" name="BankServiceException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createAccountWithBalanceResponse">
+    <wsdl:part element="tns:createAccountWithBalanceResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAccountByCprNumberResponse">
+    <wsdl:part element="tns:getAccountByCprNumberResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAccountResponse">
+    <wsdl:part element="tns:getAccountResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createAccountWithBalance">
+    <wsdl:part element="tns:createAccountWithBalance" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="retireAccount">
+    <wsdl:part element="tns:retireAccount" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="transferMoneyFromTo">
+    <wsdl:part element="tns:transferMoneyFromTo" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="transferMoneyFromToResponse">
+    <wsdl:part element="tns:transferMoneyFromToResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="BankService">
+    <wsdl:operation name="getAccount">
+      <wsdl:input message="tns:getAccount" name="getAccount">
+    </wsdl:input>
+      <wsdl:output message="tns:getAccountResponse" name="getAccountResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:BankServiceException" name="BankServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="createAccountWithBalance">
+      <wsdl:input message="tns:createAccountWithBalance" name="createAccountWithBalance">
+    </wsdl:input>
+      <wsdl:output message="tns:createAccountWithBalanceResponse" name="createAccountWithBalanceResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:BankServiceException" name="BankServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getAccountByCprNumber">
+      <wsdl:input message="tns:getAccountByCprNumber" name="getAccountByCprNumber">
+    </wsdl:input>
+      <wsdl:output message="tns:getAccountByCprNumberResponse" name="getAccountByCprNumberResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:BankServiceException" name="BankServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="retireAccount">
+      <wsdl:input message="tns:retireAccount" name="retireAccount">
+    </wsdl:input>
+      <wsdl:output message="tns:retireAccountResponse" name="retireAccountResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:BankServiceException" name="BankServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="transferMoneyFromTo">
+      <wsdl:input message="tns:transferMoneyFromTo" name="transferMoneyFromTo">
+    </wsdl:input>
+      <wsdl:output message="tns:transferMoneyFromToResponse" name="transferMoneyFromToResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:BankServiceException" name="BankServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BankServiceServiceSoapBinding" type="tns:BankService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getAccount">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getAccount">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getAccountResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="BankServiceException">
+        <soap:fault name="BankServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="createAccountWithBalance">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="createAccountWithBalance">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="createAccountWithBalanceResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="BankServiceException">
+        <soap:fault name="BankServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getAccountByCprNumber">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getAccountByCprNumber">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getAccountByCprNumberResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="BankServiceException">
+        <soap:fault name="BankServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="retireAccount">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="retireAccount">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="retireAccountResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="BankServiceException">
+        <soap:fault name="BankServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="transferMoneyFromTo">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="transferMoneyFromTo">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="transferMoneyFromToResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="BankServiceException">
+        <soap:fault name="BankServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="BankServiceService">
+    <wsdl:port binding="tns:BankServiceServiceSoapBinding" name="BankServicePort">
+      <soap:address location="http://---host---:---port---/BankService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

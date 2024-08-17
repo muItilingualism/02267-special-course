@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+elm make src/Main.elm --output=main.js --debug
+cp index.html main.js w3.css ../webapp
+# sed "s/--replace-me--/`hostname -f`/" index.html > ../webapp/index.html
+sed "s/--replace-me--/`hostname -f`/" index.html > ../webapp/index.html

@@ -1,0 +1,14 @@
+target
+.classpath
+.project
+.settings
+bank_service/Dockerfile
+bank_service/docker-compose.yml
+bank_service/src/main/webapp/index.html
+bank_service/src/main/webapp/tools.zip
+bank_service/src/main/resources/META-INF/resources/tools.zip
+bank_service/src/main/webapp/BankService.wsdl.xml
+bank_service/src/main/webapp/bank.yaml
+soap_jdk11_wsimport/pom.xml
+soap_jdk11_wsimport/src/dtu/ws/fastmoney
+

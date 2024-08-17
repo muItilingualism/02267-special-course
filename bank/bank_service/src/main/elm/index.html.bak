@@ -1,0 +1,13 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>GPS Tracker</title>
+  <!-- <link rel="stylesheet" href="whatever-you-want.css"> -->
+  <script src="main.js"></script>
+</head>
+  <div id="elm"/>
+<body>
+  <script>var app = Elm.Main.init({ node: document.getElementById("elm")});</script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+#!/bin/bash
+if [[ $1 = -h ]] || [ ! $# -eq 4 ]
+then
+    echo "Usage: `basename $0` balance CPR firstName lastName"
+    exit 1
+fi
+curl -s -X POST "http://localhost:8080/rest/accounts" -H  "accept: text/plain" -H  "Content-Type: application/json" -d "{  \"balance\": $1,  \"user\": {    \"cprNumber\": \"$2\",    \"firstName\": \"$3\",    \"lastName\": \"$4\"  }}"

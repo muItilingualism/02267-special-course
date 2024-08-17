@@ -6,7 +6,7 @@ public class Payment {
     private String merchantId;
 
     public Payment() {}
-    
+
     public Payment(int amount, String customerId, String merchantId) {
         this.amount = amount;
         this.customerId = customerId;

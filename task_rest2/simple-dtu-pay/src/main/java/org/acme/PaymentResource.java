@@ -19,10 +19,22 @@ public class PaymentResource {
     List<Payment> list = new ArrayList<>();
     String customerId = "cid1";
     String merchantId = "mid1";
-    
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response payment(Payment payment) {
+        if (!payment.getCustomerId().equals(this.customerId)) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("customer with id " + payment.getCustomerId() + " is unknown")
+                    .build();
+        }
+
+        if (!payment.getMerchantId().equals(this.merchantId)) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("merchant with id " + payment.getMerchantId() + " is unknown")
+                    .build();
+        }
+
         list.add(payment);
         return Response.ok().build();
     }

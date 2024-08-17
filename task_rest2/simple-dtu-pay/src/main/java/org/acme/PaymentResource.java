@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.acme.model.Payment;
 
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -20,6 +21,7 @@ public class PaymentResource {
     String merchantId = "mid1";
     
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response payment(Payment payment) {
         list.add(payment);
         return Response.ok().build();

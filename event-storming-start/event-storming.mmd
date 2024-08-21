@@ -1,0 +1,72 @@
+graph LR;
+
+%% courtesy of chriseyre2000
+%% https://devrants.blog/2022/08/20/mermaid-event-storming/
+classDef facadeCommand fill:#779fae
+classDef command fill:#aec6cf
+classDef result fill:#cfcfc4 
+classDef event fill:#ffb853
+classDef domainEvent fill:#ffcb81
+classDef integrationEvent fill:#ffdeaf
+classDef query fill:#62d862
+classDef readModel fill:#77dd77
+classDef userInterface fill:#a2e8a2
+classDef aggregate fill:#fdfd9d
+classDef service fill:#fcfc78
+classDef policy fill:#b6a2db
+classDef saga fill:#c9bbe5
+classDef process fill:#ddd4ee
+classDef timer fill:#cfcfc4
+classDef person fill:#ffd1dc
+classDef system fill:#ffd1dc
+classDef comment fill:transparent
+
+subgraph event-storming-start
+    M[Merchant]:::person --> RP[Request\nPayment]:::command
+    RP --> PS[Payment\nService]:::service
+    PS --> PR[Payment\nRequested]:::event
+    PR --> P1[For payment fulfillment,\nthe bank account of the\ncustomer needs to be known]:::policy
+    PR --> P2[For payment fulfillment,\nthe bank account of the\nmerchant needs to be known]:::policy
+
+    P1 --> RC[Retrieve customer\nbank account number]:::command
+    RC --> PS2[Payment\nService]:::service
+    PS2 --> CBRF[Customer id\nnumber retrieval failed]:::event
+    PS2 --> CBR[Customer id\nnumber retrieved]:::event
+
+    P2 --> RM[Retrieve merchant\nbank account number]:::command
+    RM --> PS3[Payment\nService]:::service
+    PS3 --> MBR[Merchant id\nnumber retrieved]:::event
+    PS3 --> MBRF[Merchant id\nnumber retrieval failed]:::event
+
+    CBR --> P3[When the customer and\nthe merchant bank account\numbers are known\nthe money can be transferred]:::policy
+    MBR --> P3
+    P3 --> TM[Transfer\nMoney]:::command
+    TM --> BS[Bank]:::system
+
+    BS --> MTF[Money\ntransferred failed]:::event
+    BS --> MT[Money\ntransferred]:::event
+
+    MT --> P4[Successful money-transfers\nwill be logged]:::policy
+    P4 --> LMT[Log\nMoney Transfer]:::command
+    LMT --> PS4[Payment\nService]:::service
+
+
+    CBRF --> P5[If either of these\nevents occur, report\nto the merchant that\nthe payment has failed.]:::policy
+    MBRF --> P5
+    MTF --> P5
+end
+
+subgraph Legend
+    direction LR
+    A[Actor]:::person --> C[Command]:::command
+    C --> SE[Service]:::service
+    C --> SY[System]:::system
+    SE --> E[Event]:::event
+    SY --> E
+    E --> R[Read Model]:::readModel
+    E --> P[Policy]:::policy
+    P --> C
+    P --> SY
+    R --> U[User Interface]:::userInterface
+    U --> A
+end

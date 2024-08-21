@@ -29,6 +29,7 @@ in pkgs.mkShell {
     docker
     docker-compose
     rootlesskit
+    mermaid-cli
   ];
 
   shellHook = ''

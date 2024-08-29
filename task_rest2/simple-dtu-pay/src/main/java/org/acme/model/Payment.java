@@ -2,8 +2,8 @@ package org.acme.model;
 
 public class Payment {
     private int amount;
-    private String creditorAccountId;
-    private String debtorAccountId;
+    private String creditor;
+    private String debtor;
     private String description;
 
     public Payment() {
@@ -11,8 +11,8 @@ public class Payment {
 
     public Payment(int amount, String creditorAccountId, String debtorAccountId, String description) {
         this.amount = amount;
-        this.creditorAccountId = creditorAccountId;
-        this.debtorAccountId = debtorAccountId;
+        this.creditor = creditorAccountId;
+        this.debtor = debtorAccountId;
         this.description = description;
     }
 
@@ -24,20 +24,20 @@ public class Payment {
         this.amount = amount;
     }
 
-    public String getCreditorAccountId() {
-        return creditorAccountId;
+    public String getCreditor() {
+        return creditor;
     }
 
-    public void setCreditorAccountId(String creditorAccountId) {
-        this.creditorAccountId = creditorAccountId;
+    public void setCreditor(String creditorAccountId) {
+        this.creditor = creditorAccountId;
     }
 
-    public String getDebtorAccountId() {
-        return debtorAccountId;
+    public String getDebtor() {
+        return debtor;
     }
 
-    public void setDebtorAccountId(String debtorAccountId) {
-        this.debtorAccountId = debtorAccountId;
+    public void setDebtor(String debtorAccountId) {
+        this.debtor = debtorAccountId;
     }
 
     public String getDescription() {

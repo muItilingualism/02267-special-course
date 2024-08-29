@@ -1,6 +1,10 @@
 package org.acme;
 
+import java.util.Optional;
+
+import org.acme.model.Account;
 import org.acme.model.AccountCreationRequest;
+import org.acme.model.Payment;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import io.cucumber.core.internal.com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,11 +30,11 @@ public class BankService {
         Response response = target.request(MediaType.TEXT_PLAIN)
                 //.post(Entity.entity(account, MediaType.APPLICATION_JSON)); direct object->json does not work???
                 .post(Entity.entity(toJsonString(account), MediaType.APPLICATION_JSON));
-        
+
         if (response.getStatus() != 200) {
             throw new Error("Failed to create bank account with error " + response.getStatus() + " and issue " + response.readEntity(String.class));
         }
-        
+
         String createdAccountId = response.readEntity(String.class);
         response.close();
         client.close();
@@ -46,22 +50,70 @@ public class BankService {
         if (response.getStatus() != 204) {
             throw new Error("Failed to delete bank account with error " + response.getStatus() + " and issue " + response.readEntity(String.class));
         }
-        
+
         response.close();
         client.close();
     }
 
-    private String toJsonString(AccountCreationRequest account) {
+    public String getAccountId(String accountCpr) {
+        Client client = ClientBuilder.newBuilder().build();
+        WebTarget target = client.target(bankUrl + "/rest/accounts/cpr/" + accountCpr);
+
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        if (response.getStatus() != 200) {
+            throw new Error("Failed to get bank account id of " + accountCpr + " with error " + response.getStatus()
+                    + " and issue " + response.readEntity(String.class));
+        }
+
+        String jsonResponse = response.readEntity(String.class);
+
+        Account account = toObject(jsonResponse, Account.class)
+                .orElseThrow(() -> new Error("Failed to convert accountjson to account object."));
+
+        response.close();
+        client.close();
+
+        return account.getId();
+    }
+
+    public void transferMoney(Payment payment) {
+        Client client = ClientBuilder.newBuilder().build();
+        WebTarget target = client.target(bankUrl + "/rest/payments");
+
+        Response response = target.request(MediaType.TEXT_PLAIN)
+                .post(Entity.entity(toJsonString(payment), MediaType.APPLICATION_JSON));
+
+        if (response.getStatus() != 204) {
+            throw new Error("Failed to transfer money with error " + response.getStatus() + " and issue "
+                    + response.readEntity(String.class));
+        }
+
+        System.out.println(response.readEntity(String.class));
+    }
+
+    private String toJsonString(Object object) {
         ObjectMapper objectMapper = new ObjectMapper();
-        String jsonAccount = "";
+        String jsonObject = "";
 
         try {
-            jsonAccount = objectMapper.writeValueAsString(account);
-            System.out.println("JSON payload: " + jsonAccount);
+            jsonObject = objectMapper.writeValueAsString(object);
+            System.out.println("JSON payload: " + jsonObject);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
 
-        return jsonAccount;
+        return jsonObject;
+    }
+
+    private <T> Optional<T> toObject(String json, Class<T> valueType) {
+        Optional<T> object;
+        try {
+            object = Optional.of(new ObjectMapper().readValue(json, valueType));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            object = Optional.empty();
+        }
+
+        return object;
     }
 }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.acme.model.Account;
-import org.acme.model.Payment;
+import org.acme.model.PaymentRequest;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import jakarta.annotation.PostConstruct;
@@ -14,7 +14,7 @@ import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class PaymentService {
-    private List<Payment> payments = new ArrayList<>();
+    private List<PaymentRequest> payments = new ArrayList<>();
     private List<String> accountIds = new ArrayList<>();
     private Account customer = new Account(1000, "cid1", "Cust", "Omer");
     private Account merchant = new Account(1000, "mid1", "Mer", "Chant");
@@ -49,11 +49,11 @@ public class PaymentService {
         }
     }
 
-    public void savePayment(Payment payment) {
+    public void savePayment(PaymentRequest payment) {
         payments.add(payment);
     }
 
-    public List<Payment> getAllPayments() {
+    public List<PaymentRequest> getAllPayments() {
         return new ArrayList<>(payments);
     }
 

@@ -1,6 +1,6 @@
 package org.acme.model;
 
-public class Payment {
+public class PaymentRequest {
     private int amount;
     private String customerId;
     private String merchantId;

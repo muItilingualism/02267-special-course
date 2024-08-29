@@ -1,6 +1,6 @@
 package org.acme;
 
-import org.acme.model.Payment;
+import org.acme.model.PaymentRequest;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -19,7 +19,7 @@ public class PaymentResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response payment(Payment payment) {
+    public Response payment(PaymentRequest payment) {
         if (!paymentService.isValidCustomer(payment.getCustomerId())) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("customer with id " + payment.getCustomerId() + " is unknown")

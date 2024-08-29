@@ -10,10 +10,6 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.client.Client;
-import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.client.WebTarget;
-import jakarta.ws.rs.core.Response;
 
 @ApplicationScoped
 public class PaymentService {
@@ -46,16 +42,5 @@ public class PaymentService {
 
     public boolean isValidMerchant(String merchantId) {
         return "mid1".equals(merchantId);
-    }
-
-    public int testBank() {
-        Client client = ClientBuilder.newBuilder().build();
-        WebTarget target = client.target(bankUrl + "/index.html");
-
-        Response response = target.request().get();
-        int statusCode = response.getStatus();
-
-        response.close();
-        return statusCode;
     }
 }

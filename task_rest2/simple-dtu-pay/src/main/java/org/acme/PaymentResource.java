@@ -41,12 +41,4 @@ public class PaymentResource {
     public Response list() {
         return Response.ok(paymentService.getAllPayments()).build();
     }
-
-    @GET
-    @Path("/test")
-    public Response testBank() {
-        System.out.println("testBank endpoint called");
-        int statusCode = paymentService.testBank();
-        return Response.ok("Received status code: " + statusCode).build();
-    }
 }

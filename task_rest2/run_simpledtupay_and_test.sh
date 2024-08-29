@@ -1,9 +1,10 @@
 #!/bin/sh
 set -e
 
-echo "If you are unable to access the end-points, run 'mvn clean package before this script"
-
 run_simpledtupay() {
+    
+    (cd simple-dtu-pay ; mvn clean package )
+
     if docker-compose up --build -d; then
         echo "SimpleDTUPay service started successfully"
     else

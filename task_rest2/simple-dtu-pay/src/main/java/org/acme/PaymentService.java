@@ -16,6 +16,8 @@ import jakarta.inject.Inject;
 public class PaymentService {
     private List<Payment> payments = new ArrayList<>();
     private List<String> accountIds = new ArrayList<>();
+    private Account customer = new Account(1000, "cid1", "Cust", "Omer");
+    private Account merchant = new Account(1000, "mid1", "Mer", "Chant");
 
     @ConfigProperty(name = "bank.url")
     String bankUrl;
@@ -34,9 +36,6 @@ public class PaymentService {
     }
 
     private void createDefaultAccounts() {
-        Account customer = new Account(1000, "cid1", "Cust", "Omer");
-        Account merchant = new Account(1000, "mid1", "Mer", "Chant");
-
         String customerId = bankService.createAccount(customer);
         String merchantId = bankService.createAccount(merchant);
 
@@ -58,11 +57,11 @@ public class PaymentService {
         return new ArrayList<>(payments);
     }
 
-    public boolean isValidCustomer(String customerId) {
-        return "cid1".equals(customerId);
+    public boolean isValidCustomer(String customerCpr) {
+        return customer.getUser().getCprNumber().equals(customerCpr);
     }
 
-    public boolean isValidMerchant(String merchantId) {
-        return "mid1".equals(merchantId);
+    public boolean isValidMerchant(String merchantCpr) {
+        return merchant.getUser().getCprNumber().equals(merchantCpr);
     }
 }

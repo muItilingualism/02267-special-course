@@ -2,18 +2,20 @@ package org.acme;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.acme.model.Account;
 import org.acme.model.Payment;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class PaymentService {
     private List<Payment> payments = new ArrayList<>();
+    private List<String> accountIds = new ArrayList<>();
 
     @ConfigProperty(name = "bank.url")
     String bankUrl;
@@ -21,15 +23,35 @@ public class PaymentService {
     @Inject
     BankService bankService;
 
+    @PostConstruct
+    public void postConstruct() {
+        createDefaultAccounts();
+    }
+
+    @PreDestroy
+    public void preDestroy() {
+        deleteDefaultAccounts();
+    }
+
+    private void createDefaultAccounts() {
+        Account customer = new Account(1000, "012345-6789", "Cust", "Omer");
+        Account merchant = new Account(1000, "123456-7890", "Mer", "Chant");
+
+        String customerId = bankService.createAccount(customer);
+        String merchantId = bankService.createAccount(merchant);
+
+        accountIds.add(customerId);
+        accountIds.add(merchantId);
+    }
+
+    private void deleteDefaultAccounts() {
+        for (String id : accountIds) {
+            bankService.deleteAccount(id);
+        }
+    }
+
     public void savePayment(Payment payment) {
         payments.add(payment);
-
-        Random random = new Random();
-
-        Account account = new Account(1000, String.valueOf(random.nextInt()), "John", "Doe");
-        
-        String accountId = bankService.createAccount(account);
-        bankService.deleteAccount(accountId);
     }
 
     public List<Payment> getAllPayments() {

@@ -5,3 +5,9 @@ services:
       dockerfile: src/main/docker/Dockerfile.jvm
     ports:
       - "8080:8080"
+  bank:
+    build:
+      context: ../bank/bank_service
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"

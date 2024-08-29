@@ -50,8 +50,14 @@ public class PaymentService {
         }
     }
 
-    public void savePayment(PaymentRequest payment) {
-        payments.add(payment);
+    public void savePayment(PaymentRequest paymentRequest) {
+        paymentsRequests.add(paymentRequest);
+        
+        String customerBankId = bankService.getAccountId(paymentRequest.getCustomerId());
+        String merchantBankId = bankService.getAccountId(paymentRequest.getMerchantId());
+
+        Payment payment = new Payment(paymentRequest.getAmount(), customerBankId, merchantBankId, String.format("TRANSACTION OF %d BY %s TO %s", paymentRequest.getAmount(), customerBankId, merchantBankId));
+        bankService.transferMoney(payment);
     }
 
     public List<PaymentRequest> getAllPayments() {

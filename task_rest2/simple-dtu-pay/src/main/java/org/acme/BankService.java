@@ -87,8 +87,6 @@ public class BankService {
             throw new Error("Failed to transfer money with error " + response.getStatus() + " and issue "
                     + response.readEntity(String.class));
         }
-
-        System.out.println(response.readEntity(String.class));
     }
 
     private String toJsonString(Object object) {
@@ -97,7 +95,6 @@ public class BankService {
 
         try {
             jsonObject = objectMapper.writeValueAsString(object);
-            System.out.println("JSON payload: " + jsonObject);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

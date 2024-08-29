@@ -34,8 +34,8 @@ public class PaymentService {
     }
 
     private void createDefaultAccounts() {
-        Account customer = new Account(1000, "012345-6789", "Cust", "Omer");
-        Account merchant = new Account(1000, "123456-7890", "Mer", "Chant");
+        Account customer = new Account(1000, "cid1", "Cust", "Omer");
+        Account merchant = new Account(1000, "mid1", "Mer", "Chant");
 
         String customerId = bankService.createAccount(customer);
         String merchantId = bankService.createAccount(merchant);

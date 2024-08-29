@@ -1,6 +1,6 @@
 package org.acme;
 
-import org.acme.model.Account;
+import org.acme.model.AccountCreationRequest;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import io.cucumber.core.internal.com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,7 +19,7 @@ public class BankService {
     @ConfigProperty(name = "bank.url")
     String bankUrl;
 
-    public String createAccount(Account account) {
+    public String createAccount(AccountCreationRequest account) {
         Client client = ClientBuilder.newBuilder().build();
         WebTarget target = client.target(bankUrl + "/rest/accounts");
 
@@ -51,7 +51,7 @@ public class BankService {
         client.close();
     }
 
-    private String toJsonString(Account account) {
+    private String toJsonString(AccountCreationRequest account) {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonAccount = "";
 

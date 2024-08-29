@@ -1,0 +1,7 @@
+services:
+  simpledtupay:
+    build:
+      context: ./simple-dtu-pay
+      dockerfile: src/main/docker/Dockerfile.jvm
+    ports:
+      - "8080:8080"

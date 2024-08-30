@@ -19,20 +19,20 @@ public class PaymentResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response payment(PaymentRequest payment) {
-        if (!paymentService.isValidCustomer(payment.getCustomerId())) {
+    public Response payment(PaymentRequest paymentRequest) {
+        if (!paymentService.isValidCustomer(paymentRequest.getCustomerId())) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("customer with id " + payment.getCustomerId() + " is unknown")
+                    .entity("customer with id " + paymentRequest.getCustomerId() + " is unknown")
                     .build();
         }
 
-        if (!paymentService.isValidMerchant(payment.getMerchantId())) {
+        if (!paymentService.isValidMerchant(paymentRequest.getMerchantId())) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("merchant with id " + payment.getMerchantId() + " is unknown")
+                    .entity("merchant with id " + paymentRequest.getMerchantId() + " is unknown")
                     .build();
         }
 
-        paymentService.savePayment(payment);
+        paymentService.processPayment(paymentRequest);
         return Response.ok().build();
     }
 

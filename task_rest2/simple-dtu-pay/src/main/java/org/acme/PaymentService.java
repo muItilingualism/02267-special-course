@@ -50,7 +50,7 @@ public class PaymentService {
         }
     }
 
-    public void savePayment(PaymentRequest paymentRequest) {
+    public void processPayment(PaymentRequest paymentRequest) {
         paymentsRequests.add(paymentRequest);
         
         String customerBankId = bankService.getAccountId(paymentRequest.getCustomerId());

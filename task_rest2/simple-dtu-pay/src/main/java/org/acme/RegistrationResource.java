@@ -11,19 +11,19 @@ import jakarta.ws.rs.core.Response;
 public class RegistrationResource {
 
     @Inject
-    PaymentService paymentService;
+    AccountService accountService;
 
     @POST
     @Path("/{bankAccountId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response registerAccount(String bankAccountId) {
-        if (!paymentService.isValidBankAccount(bankAccountId)) {
+        if (!accountService.isValidBankAccount(bankAccountId)) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("could not register unknown bank account")
                     .build();
         }
 
-        paymentService.processAccountRegistration(bankAccountId);
+        accountService.processAccountRegistration(bankAccountId);
         return Response.ok().build();
     }
 }

@@ -2,9 +2,7 @@ package org.acme;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import org.acme.model.Account;
 import org.acme.model.Payment;
 import org.acme.model.PaymentRequest;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -15,7 +13,6 @@ import jakarta.inject.Inject;
 @ApplicationScoped
 public class PaymentService {
     private List<PaymentRequest> paymentsRequests = new ArrayList<>();
-    private List<Account> registeredAccounts = new ArrayList<>();
 
     @ConfigProperty(name = "bank.url")
     String bankUrl;
@@ -36,23 +33,5 @@ public class PaymentService {
 
     public List<PaymentRequest> getAllPayments() {
         return new ArrayList<>(paymentsRequests);
-    }
-
-    public boolean isValidBankAccount(String id) {
-        return bankService.getAccount(id).isPresent();
-    }
-
-    public void processAccountRegistration(String bankAccountId) {
-        Optional<Account> bankAccount = bankService.getAccount(bankAccountId);
-
-        if (bankAccount.isPresent()) {
-            registerAccount(bankAccount.get());
-        } else {
-            throw new Error("Failed to get bank account by id from bank.");
-        }
-    }
-
-    private void registerAccount(Account bankAccount) {
-        registeredAccounts.add(bankAccount);
     }
 }

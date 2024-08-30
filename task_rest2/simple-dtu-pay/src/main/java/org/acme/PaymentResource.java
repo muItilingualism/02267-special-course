@@ -17,16 +17,19 @@ public class PaymentResource {
     @Inject
     PaymentService paymentService;
 
+    @Inject
+    AccountService accountService;
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response payment(PaymentRequest paymentRequest) {
-        if (!paymentService.isValidBankAccount(paymentRequest.getCustomerId())) {
+        if (!accountService.isValidBankAccount(paymentRequest.getCustomerId())) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("customer id is unknown")
                     .build();
         }
 
-        if (!paymentService.isValidBankAccount(paymentRequest.getMerchantId())) {
+        if (!accountService.isValidBankAccount(paymentRequest.getMerchantId())) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("merchant id is unknown")
                     .build();

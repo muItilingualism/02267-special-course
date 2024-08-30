@@ -49,7 +49,7 @@ public class SimpleDTUPay {
 
     public ResponseResult register(String bankAccountId) {
         Client client = ClientBuilder.newBuilder().build();
-        WebTarget target = client.target("http://localhost:8080/payment/register/" + bankAccountId);
+        WebTarget target = client.target("http://localhost:8080/register/" + bankAccountId);
 
         Response response = target.request(MediaType.APPLICATION_JSON)
                 .post(Entity.text(""));

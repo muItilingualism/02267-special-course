@@ -6,8 +6,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import dtu.example.model.AccountCreationRequest;
 import dtu.example.model.Payment;
 import dtu.example.model.PaymentResult;
+import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -18,14 +20,16 @@ public class SimpleDTUPaySteps {
     PaymentResult response;
     List<Payment> list;
 
+    Bank bank = new Bank();
+
     @Given("a customer with id {string}")
     public void aCustomerWithId(String cid) {
-        this.cid = cid;
+        this.cid = bank.createAccount(new AccountCreationRequest(1000, cid, "Cust", "Omer"));
     }
 
     @Given("a merchant with id {string}")
     public void aMerchantWithId(String mid) {
-        this.mid = mid;
+        this.mid = bank.createAccount(new AccountCreationRequest(1000, mid, "Mer", "Chant"));
     }
 
     @When("the merchant initiates a payment for {int} kr by the customer")
@@ -40,7 +44,7 @@ public class SimpleDTUPaySteps {
 
     @Given("a successful payment of {int} kr from customer {string} to merchant {string}")
     public void aSuccessfulPaymentOfKrFromCustomerToMerchant(int amount, String customerId, String merchantId) {
-        response = dtuPay.pay(amount, customerId, merchantId);
+        response = dtuPay.pay(amount, this.cid, this.mid);
         assertTrue(response.isSuccessful());
     }
 
@@ -52,11 +56,21 @@ public class SimpleDTUPaySteps {
     @Then("the list contains the payment where customer {string} paid {int} kr to merchant {string}")
     public void theListContainsThePaymentWhereCustomerPaidKrToMerchant(String customerId, int amount,
             String merchantId) {
-        Payment payment = this.list.get(0);
+        Payment payment = this.list.get(1);
 
         assertEquals(amount, payment.getAmount());
-        assertEquals(customerId, payment.getCustomerId());
-        assertEquals(merchantId, payment.getMerchantId());
+        assertEquals(cid, payment.getCustomerId());
+        assertEquals(mid, payment.getMerchantId());
+    }
+
+    @Given("an unregistered customer with id {string}")
+    public void anUnregisteredCustomerWithId(String cid) {
+        this.cid = cid;
+    }
+
+    @Given("an unregistered merchant with id {string}")
+    public void anUnregisteredMerchantWithId(String mid) {
+        this.mid = mid;
     }
 
     @Then("the payment is not successful")
@@ -67,5 +81,11 @@ public class SimpleDTUPaySteps {
     @Then("an error message is returned saying {string}")
     public void anErrorMessageIsReturnedSaying(String errorMessage) {
         assertEquals(errorMessage, this.response.getMessage());
+    }
+
+    @After
+    public void removeBankAccounts() {
+        bank.deleteAccount(cid);
+        bank.deleteAccount(mid);
     }
 }

@@ -53,10 +53,11 @@ public class PaymentService {
     public void processPayment(PaymentRequest paymentRequest) {
         paymentsRequests.add(paymentRequest);
         
-        String customerBankId = bankService.getAccountId(paymentRequest.getCustomerId());
-        String merchantBankId = bankService.getAccountId(paymentRequest.getMerchantId());
-
-        Payment payment = new Payment(paymentRequest.getAmount(), customerBankId, merchantBankId, String.format("TRANSACTION OF %d BY %s TO %s", paymentRequest.getAmount(), customerBankId, merchantBankId));
+        Payment payment = new Payment(paymentRequest.getAmount(),
+                paymentRequest.getCustomerId(),
+                paymentRequest.getMerchantId(),
+                String.format("TRANSACTION OF %d BY %s TO %s",
+                        paymentRequest.getAmount(), paymentRequest.getCustomerId(), paymentRequest.getMerchantId()));
         bankService.transferMoney(payment);
     }
 
@@ -64,11 +65,11 @@ public class PaymentService {
         return new ArrayList<>(paymentsRequests);
     }
 
-    public boolean isValidCustomer(String customerCpr) {
-        return customer.getUser().getCprNumber().equals(customerCpr);
+    public boolean isValidCustomer(String id) {
+        return bankService.getAccount(id).isPresent();
     }
 
-    public boolean isValidMerchant(String merchantCpr) {
-        return merchant.getUser().getCprNumber().equals(merchantCpr);
+    public boolean isValidMerchant(String id) {
+        return bankService.getAccount(id).isPresent();
     }
 }

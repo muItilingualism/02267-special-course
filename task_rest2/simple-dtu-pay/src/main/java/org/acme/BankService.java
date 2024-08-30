@@ -55,14 +55,13 @@ public class BankService {
         client.close();
     }
 
-    public String getAccountId(String accountCpr) {
+    public Optional<Account> getAccount(String accountId) {
         Client client = ClientBuilder.newBuilder().build();
-        WebTarget target = client.target(bankUrl + "/rest/accounts/cpr/" + accountCpr);
+        WebTarget target = client.target(bankUrl + "/rest/accounts/" + accountId);
 
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         if (response.getStatus() != 200) {
-            throw new Error("Failed to get bank account id of " + accountCpr + " with error " + response.getStatus()
-                    + " and issue " + response.readEntity(String.class));
+            return Optional.empty();
         }
 
         String jsonResponse = response.readEntity(String.class);
@@ -73,7 +72,7 @@ public class BankService {
         response.close();
         client.close();
 
-        return account.getId();
+        return Optional.of(account);
     }
 
     public void transferMoney(Payment payment) {

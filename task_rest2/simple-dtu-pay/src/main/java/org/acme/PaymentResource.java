@@ -41,4 +41,18 @@ public class PaymentResource {
     public Response list() {
         return Response.ok(paymentService.getAllPayments()).build();
     }
+
+    @POST
+    @Path("/register/{bankAccountId}") //TODO move to separate resource
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response registerAccount(String bankAccountId) {
+        if (!paymentService.isValidCustomer(bankAccountId)) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("could not register unknown bank account")
+                    .build();
+        }
+
+        paymentService.processAccountRegistration(bankAccountId);
+        return Response.ok().build();
+    }
 }

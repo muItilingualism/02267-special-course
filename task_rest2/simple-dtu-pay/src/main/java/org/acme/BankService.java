@@ -3,7 +3,6 @@ package org.acme;
 import java.util.Optional;
 
 import org.acme.model.Account;
-import org.acme.model.AccountCreationRequest;
 import org.acme.model.Payment;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
@@ -22,25 +21,6 @@ public class BankService {
 
     @ConfigProperty(name = "bank.url")
     String bankUrl;
-
-    public String createAccount(AccountCreationRequest account) {
-        Client client = ClientBuilder.newBuilder().build();
-        WebTarget target = client.target(bankUrl + "/rest/accounts");
-
-        Response response = target.request(MediaType.TEXT_PLAIN)
-                //.post(Entity.entity(account, MediaType.APPLICATION_JSON)); direct object->json does not work???
-                .post(Entity.entity(toJsonString(account), MediaType.APPLICATION_JSON));
-
-        if (response.getStatus() != 200) {
-            throw new Error("Failed to create bank account with error " + response.getStatus() + " and issue " + response.readEntity(String.class));
-        }
-
-        String createdAccountId = response.readEntity(String.class);
-        response.close();
-        client.close();
-
-        return createdAccountId;
-    }
 
     public void deleteAccount(String accountId) {
         Client client = ClientBuilder.newBuilder().build();

@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
+import java.util.UUID;
 
 import dtu.example.model.AccountCreationRequest;
 import dtu.example.model.Payment;
@@ -56,7 +57,7 @@ public class SimpleDTUPaySteps {
     @Then("the list contains the payment where customer {string} paid {int} kr to merchant {string}")
     public void theListContainsThePaymentWhereCustomerPaidKrToMerchant(String customerId, int amount,
             String merchantId) {
-        Payment payment = this.list.get(1);
+        Payment payment = this.list.get(1); // FIXME dependant on scenario order.
 
         assertEquals(amount, payment.getAmount());
         assertEquals(cid, payment.getCustomerId());
@@ -65,12 +66,12 @@ public class SimpleDTUPaySteps {
 
     @Given("an unregistered customer with id {string}")
     public void anUnregisteredCustomerWithId(String cid) {
-        this.cid = cid;
+        this.cid = UUID.randomUUID().toString();
     }
 
     @Given("an unregistered merchant with id {string}")
     public void anUnregisteredMerchantWithId(String mid) {
-        this.mid = mid;
+        this.mid = UUID.randomUUID().toString();
     }
 
     @Then("the payment is not successful")

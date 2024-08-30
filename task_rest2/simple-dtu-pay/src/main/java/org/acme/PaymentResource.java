@@ -22,13 +22,13 @@ public class PaymentResource {
     public Response payment(PaymentRequest paymentRequest) {
         if (!paymentService.isValidCustomer(paymentRequest.getCustomerId())) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("customer with id " + paymentRequest.getCustomerId() + " is unknown")
+                    .entity("customer id is unknown")
                     .build();
         }
 
         if (!paymentService.isValidMerchant(paymentRequest.getMerchantId())) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("merchant with id " + paymentRequest.getMerchantId() + " is unknown")
+                    .entity("merchant id is unknown")
                     .build();
         }
 

@@ -20,13 +20,13 @@ public class PaymentResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response payment(PaymentRequest paymentRequest) {
-        if (!paymentService.isValidCustomer(paymentRequest.getCustomerId())) {
+        if (!paymentService.isValidBankAccount(paymentRequest.getCustomerId())) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("customer id is unknown")
                     .build();
         }
 
-        if (!paymentService.isValidMerchant(paymentRequest.getMerchantId())) {
+        if (!paymentService.isValidBankAccount(paymentRequest.getMerchantId())) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("merchant id is unknown")
                     .build();
@@ -46,7 +46,7 @@ public class PaymentResource {
     @Path("/register/{bankAccountId}") //TODO move to separate resource
     @Produces(MediaType.APPLICATION_JSON)
     public Response registerAccount(String bankAccountId) {
-        if (!paymentService.isValidCustomer(bankAccountId)) {
+        if (!paymentService.isValidBankAccount(bankAccountId)) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("could not register unknown bank account")
                     .build();

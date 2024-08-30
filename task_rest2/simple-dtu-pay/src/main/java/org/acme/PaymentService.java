@@ -38,12 +38,7 @@ public class PaymentService {
         return new ArrayList<>(paymentsRequests);
     }
 
-    //TODO remove duplicate
-    public boolean isValidCustomer(String id) {
-        return bankService.getAccount(id).isPresent();
-    }
-
-    public boolean isValidMerchant(String id) {
+    public boolean isValidBankAccount(String id) {
         return bankService.getAccount(id).isPresent();
     }
 

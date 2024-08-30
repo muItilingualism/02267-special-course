@@ -84,6 +84,16 @@ public class SimpleDTUPaySteps {
         assertEquals(errorMessage, this.response.getMessage());
     }
 
+    @When("the account is registered")
+    public void theAccountIsRegistered() {
+        response = dtuPay.register(this.cid);
+    }
+
+    @Then("the account registration is successful")
+    public void theAccountRegistrationIsSuccessful() {
+        assertTrue(response.isSuccessful());
+    }
+
     @After
     public void removeBankAccounts() {
         bank.deleteAccount(cid);

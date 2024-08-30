@@ -25,3 +25,8 @@ Scenario: Merchant is not registered
     When the merchant initiates a payment for 10 kr by the customer
     Then the payment is not successful
     And an error message is returned saying "merchant id is unknown"
+
+Scenario: Account registration
+    Given a customer with id "cid1"
+    When the account is registered
+    Then the account registration is successful

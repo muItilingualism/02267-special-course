@@ -46,4 +46,19 @@ public class SimpleDTUPay {
 
         return list;
     }
+
+    public ResponseResult register(String bankAccountId) {
+        Client client = ClientBuilder.newBuilder().build();
+        WebTarget target = client.target("http://localhost:8080/payment/register/" + bankAccountId);
+
+        Response response = target.request(MediaType.APPLICATION_JSON)
+                .post(Entity.text(""));
+
+        int statusCode = response.getStatus();
+        String message = response.readEntity(String.class);
+
+        response.close();
+
+        return new ResponseResult(statusCode, message);
+    }
 }

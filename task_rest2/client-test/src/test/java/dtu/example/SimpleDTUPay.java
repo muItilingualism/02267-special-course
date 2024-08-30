@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dtu.example.model.Payment;
-import dtu.example.model.PaymentResult;
+import dtu.example.model.ResponseResult;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.ws.rs.client.Client;
@@ -16,7 +16,7 @@ import jakarta.ws.rs.core.Response;
 
 public class SimpleDTUPay {
 
-    public PaymentResult pay(int amount, String customerId, String merchantId) {
+    public ResponseResult pay(int amount, String customerId, String merchantId) {
         Payment payment = new Payment(amount, customerId, merchantId);
         Client client = ClientBuilder.newBuilder().build();
         WebTarget target = client.target("http://localhost:8080/payment");
@@ -29,7 +29,7 @@ public class SimpleDTUPay {
 
         response.close();
 
-        return new PaymentResult(statusCode, message);
+        return new ResponseResult(statusCode, message);
     }
 
     public List<Payment> list() {

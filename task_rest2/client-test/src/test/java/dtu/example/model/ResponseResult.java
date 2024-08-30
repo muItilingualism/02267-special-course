@@ -1,10 +1,10 @@
 package dtu.example.model;
 
-public class PaymentResult {
+public class ResponseResult {
     private int statusCode;
     private String message;
 
-    public PaymentResult(int statusCode, String message) {
+    public ResponseResult(int statusCode, String message) {
         this.statusCode = statusCode;
         this.message = message;
     }

@@ -9,7 +9,7 @@ import java.util.UUID;
 
 import dtu.example.model.AccountCreationRequest;
 import dtu.example.model.Payment;
-import dtu.example.model.PaymentResult;
+import dtu.example.model.ResponseResult;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -18,7 +18,7 @@ import io.cucumber.java.en.When;
 public class SimpleDTUPaySteps {
     String cid, mid;
     SimpleDTUPay dtuPay = new SimpleDTUPay();
-    PaymentResult response;
+    ResponseResult response;
     List<Payment> list;
 
     Bank bank = new Bank();

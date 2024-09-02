@@ -7,8 +7,8 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("/register")
-public class RegistrationResource {
+@Path("/accounts")
+public class AccountResource {
 
     @Inject
     AccountService accountService;

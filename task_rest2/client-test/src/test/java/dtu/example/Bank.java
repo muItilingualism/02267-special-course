@@ -2,8 +2,6 @@ package dtu.example;
 
 import java.util.Optional;
 
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-
 import dtu.example.model.AccountCreationRequest;
 import io.cucumber.core.internal.com.fasterxml.jackson.core.JsonProcessingException;
 import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,9 +13,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 public class Bank {
-
-    @ConfigProperty(name = "bank.url")
-    String bankUrl;
 
     public String createAccount(AccountCreationRequest account) {
         Client client = ClientBuilder.newBuilder().build();

@@ -13,6 +13,7 @@ let
     vscodeExtensions = with pkgs.vscode-extensions; [
       vscjava.vscode-java-pack
       redhat.java
+      redhat.vscode-xml
       vscjava.vscode-java-debug
       vscjava.vscode-java-test
       vscjava.vscode-maven

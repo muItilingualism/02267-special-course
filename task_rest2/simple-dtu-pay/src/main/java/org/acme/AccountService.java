@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.acme.model.Account;
+import org.acme.model.exception.UnknownBankAccountIdException;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -26,7 +27,7 @@ public class AccountService {
         if (bankAccount.isPresent()) {
             registerAccount(bankAccount.get());
         } else {
-            throw new Error("Failed to get bank account by id from bank.");
+            throw new UnknownBankAccountIdException(bankAccountId);
         }
     }
 

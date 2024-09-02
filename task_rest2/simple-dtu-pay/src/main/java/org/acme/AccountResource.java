@@ -1,5 +1,9 @@
 package org.acme;
 
+import org.acme.model.exception.UnknownBankAccountIdException;
+import org.jboss.resteasy.reactive.RestResponse;
+import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
+
 import jakarta.inject.Inject;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -17,13 +21,12 @@ public class AccountResource {
     @Path("/{bankAccountId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response registerAccount(String bankAccountId) {
-        if (!accountService.isValidBankAccount(bankAccountId)) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("could not register unknown bank account")
-                    .build();
-        }
-
         accountService.processAccountRegistration(bankAccountId);
         return Response.ok().build();
+    }
+
+    @ServerExceptionMapper
+    public RestResponse<String> mapException(UnknownBankAccountIdException x) {
+        return RestResponse.status(Response.Status.NOT_FOUND, "Unknown bank account id: " + x.id);
     }
 }

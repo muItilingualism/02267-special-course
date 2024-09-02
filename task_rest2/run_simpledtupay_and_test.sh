@@ -3,8 +3,7 @@ set -e
 
 run_simpledtupay() {
     
-    (cd simple-dtu-pay ; mvn clean package )
-    ( cd ../bank/bank_service ; ./build.sh localhost 8081 )
+    ( cd simple-dtu-pay ; mvn clean package )
 
     if docker-compose up --build -d; then
         echo "SimpleDTUPay service started successfully"
@@ -36,10 +35,9 @@ main() {
     echo "Running end-to-end tests..."
     run_client_tests
     
-    echo "Stopping SimpleDTUPay service..."
-    docker-compose down
-    
     echo "All tests passed."
+    echo "To stop the containers, use 'docker-compose down'"
+    echo "To rerun the tests, run this script again."
 }
 
 main

@@ -1,6 +1,9 @@
 package org.acme;
 
 import org.acme.model.PaymentRequest;
+import org.acme.model.exception.MoneyTransferException;
+import org.jboss.resteasy.reactive.RestResponse;
+import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -43,5 +46,11 @@ public class PaymentResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response list() {
         return Response.ok(paymentService.getAllPayments()).build();
+    }
+
+    //TODO handle specific errors instead of relying on catch-all.
+    @ServerExceptionMapper
+    public RestResponse<String> mapException(MoneyTransferException x) {
+        return RestResponse.status(Response.Status.INTERNAL_SERVER_ERROR, "Failed to transfer money with error " + x.status + " and issue " + x.message);
     }
 }

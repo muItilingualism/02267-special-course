@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.acme.model.Account;
 import org.acme.model.Payment;
+import org.acme.model.exception.MoneyTransferException;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -45,8 +46,7 @@ public class BankService {
                 .post(Entity.entity(payment, MediaType.APPLICATION_JSON));
 
         if (response.getStatus() != 204) {
-            throw new Error("Failed to transfer money with error " + response.getStatus() + " and issue "
-                    + response.readEntity(String.class));
+            throw new MoneyTransferException(response.getStatus(), response.readEntity(String.class));
         }
     }
 }

@@ -19,7 +19,7 @@ public class SimpleDTUPay {
     public ResponseResult pay(int amount, String customerId, String merchantId) {
         Payment payment = new Payment(amount, customerId, merchantId);
         Client client = ClientBuilder.newBuilder().build();
-        WebTarget target = client.target("http://localhost:8080/payment");
+        WebTarget target = client.target("http://localhost:8080/payments");
 
         Response response = target.request(MediaType.APPLICATION_JSON)
                 .post(Entity.entity(payment, MediaType.APPLICATION_JSON));
@@ -34,7 +34,7 @@ public class SimpleDTUPay {
 
     public List<Payment> list() {
         Client client = ClientBuilder.newBuilder().build();
-        WebTarget target = client.target("http://localhost:8080/payment");
+        WebTarget target = client.target("http://localhost:8080/payments");
 
         String response = target.request(MediaType.APPLICATION_JSON).get(String.class);
 

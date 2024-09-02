@@ -22,19 +22,6 @@ public class BankService {
     @ConfigProperty(name = "bank.url")
     String bankUrl;
 
-    public void deleteAccount(String accountId) {
-        Client client = ClientBuilder.newBuilder().build();
-        WebTarget target = client.target(bankUrl + "/rest/accounts/" + accountId);
-
-        Response response = target.request(MediaType.TEXT_PLAIN).delete();
-        if (response.getStatus() != 204) {
-            throw new Error("Failed to delete bank account with error " + response.getStatus() + " and issue " + response.readEntity(String.class));
-        }
-
-        response.close();
-        client.close();
-    }
-
     public Optional<Account> getAccount(String accountId) {
         Client client = ClientBuilder.newBuilder().build();
         WebTarget target = client.target(bankUrl + "/rest/accounts/" + accountId);

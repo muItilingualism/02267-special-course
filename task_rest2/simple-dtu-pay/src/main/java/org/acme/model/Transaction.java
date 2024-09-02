@@ -1,5 +1,8 @@
 package org.acme.model;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
+
+@RegisterForReflection
 public class Transaction {
     private int id;
     private String debtor;

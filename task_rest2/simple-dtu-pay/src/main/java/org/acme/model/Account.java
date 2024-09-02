@@ -2,6 +2,9 @@ package org.acme.model;
 
 import java.util.List;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
+
+@RegisterForReflection
 public class Account {
     private String id;
     private int balance;

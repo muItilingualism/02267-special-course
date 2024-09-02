@@ -1,5 +1,8 @@
 package org.acme.model;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
+
+@RegisterForReflection
 public class PaymentRequest {
     private int amount;
     private String customerId;

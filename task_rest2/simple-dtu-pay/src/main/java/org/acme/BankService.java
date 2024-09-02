@@ -6,8 +6,6 @@ import org.acme.model.Account;
 import org.acme.model.Payment;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import io.cucumber.core.internal.com.fasterxml.jackson.core.JsonProcessingException;
-import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -31,10 +29,7 @@ public class BankService {
             return Optional.empty();
         }
 
-        String jsonResponse = response.readEntity(String.class);
-
-        Account account = toObject(jsonResponse, Account.class)
-                .orElseThrow(() -> new Error("Failed to convert accountjson to account object."));
+        Account account = response.readEntity(Account.class);
 
         response.close();
         client.close();
@@ -47,36 +42,11 @@ public class BankService {
         WebTarget target = client.target(bankUrl + "/rest/payments");
 
         Response response = target.request(MediaType.TEXT_PLAIN)
-                .post(Entity.entity(toJsonString(payment), MediaType.APPLICATION_JSON));
+                .post(Entity.entity(payment, MediaType.APPLICATION_JSON));
 
         if (response.getStatus() != 204) {
             throw new Error("Failed to transfer money with error " + response.getStatus() + " and issue "
                     + response.readEntity(String.class));
         }
-    }
-
-    private String toJsonString(Object object) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonObject = "";
-
-        try {
-            jsonObject = objectMapper.writeValueAsString(object);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-        return jsonObject;
-    }
-
-    private <T> Optional<T> toObject(String json, Class<T> valueType) {
-        Optional<T> object;
-        try {
-            object = Optional.of(new ObjectMapper().readValue(json, valueType));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            object = Optional.empty();
-        }
-
-        return object;
     }
 }

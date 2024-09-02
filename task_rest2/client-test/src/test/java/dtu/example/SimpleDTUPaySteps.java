@@ -57,11 +57,17 @@ public class SimpleDTUPaySteps {
     @Then("the list contains the payment where customer {string} paid {int} kr to merchant {string}")
     public void theListContainsThePaymentWhereCustomerPaidKrToMerchant(String customerId, int amount,
             String merchantId) {
-        Payment payment = this.list.get(1); // FIXME dependant on scenario order.
+        boolean found = false;
+        for (Payment payment : this.list) {
+            if (payment.getAmount() == amount &&
+                    payment.getCustomerId().equals(cid) &&
+                    payment.getMerchantId().equals(mid)) {
+                found = true;
+                break;
+            }
+        }
 
-        assertEquals(amount, payment.getAmount());
-        assertEquals(cid, payment.getCustomerId());
-        assertEquals(mid, payment.getMerchantId());
+        assertTrue(found);
     }
 
     @Given("an unregistered customer with id {string}")

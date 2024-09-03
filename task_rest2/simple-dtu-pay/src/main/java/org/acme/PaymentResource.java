@@ -22,9 +22,6 @@ public class PaymentResource {
     @Inject
     PaymentService paymentService;
 
-    @Inject
-    AccountService accountService;
-
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response payment(PaymentRequest paymentRequest) {

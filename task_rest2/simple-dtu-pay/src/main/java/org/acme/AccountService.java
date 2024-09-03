@@ -2,9 +2,12 @@ package org.acme;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
-import org.acme.model.bank.Account;
+import org.acme.model.Account;
+import org.acme.model.AccountRegistrationRequest;
+import org.acme.model.Customer;
+import org.acme.model.Merchant;
 import org.acme.model.exception.UnknownBankAccountIdException;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -17,21 +20,35 @@ public class AccountService {
     @Inject
     BankService bankService;
 
-    public boolean isValidBankAccount(String id) {
-        return bankService.getAccount(id).isPresent();
-    }
-
-    public void processAccountRegistration(String bankAccountId) {
-        Optional<Account> bankAccount = bankService.getAccount(bankAccountId);
-
-        if (bankAccount.isPresent()) {
-            registerAccount(bankAccount.get());
+    public void processCustomerAccountRegistration(AccountRegistrationRequest account) {
+        if (isValid(account.getBankAccountId())) {
+            String id = generateAccountId();
+            registerAccount(new Customer(id, account.getFirstName(), account.getLastName(), account.getCpr(),
+                    account.getBankAccountId()));
         } else {
-            throw new UnknownBankAccountIdException(bankAccountId);
+            throw new UnknownBankAccountIdException(account.getBankAccountId());
         }
     }
 
-    private void registerAccount(Account bankAccount) {
-        registeredAccounts.add(bankAccount);
+    public void processMerchantAccountRegistration(AccountRegistrationRequest account) {
+        if (isValid(account.getBankAccountId())) {
+            String id = generateAccountId();
+            registerAccount(new Merchant(id, account.getFirstName(), account.getLastName(), account.getCpr(),
+                    account.getBankAccountId()));
+        } else {
+            throw new UnknownBankAccountIdException(account.getBankAccountId());
+        }
+    }
+
+    public boolean isValid(String bankAccountId) {
+        return bankService.getAccount(bankAccountId).isPresent();
+    }
+
+    private String generateAccountId() {
+        return UUID.randomUUID().toString();
+    }
+
+    private void registerAccount(Account account) {
+        registeredAccounts.add(account);
     }
 }

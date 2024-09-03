@@ -30,5 +30,5 @@ Scenario: Merchant is not registered
 
 Scenario: Account registration
     Given a customer with id "cid1"
-    When the account is registered
-    Then the account registration is successful
+    When the customer is registered
+    Then the customer registration is successful

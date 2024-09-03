@@ -17,7 +17,8 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 public class SimpleDTUPaySteps {
-    String cid, mid;
+    String cCpr, mCpr;
+    String cBId, mBId;
     SimpleDTUPay dtuPay = new SimpleDTUPay();
     ResponseResult response;
     List<Payment> list;
@@ -27,20 +28,22 @@ public class SimpleDTUPaySteps {
     Bank bank = new Bank();
 
     @Given("a customer with id {string}")
-    public void aCustomerWithId(String cid) {
-        this.cid = bank.createAccount(new AccountCreationRequest(1000, cid, "Cust", "Omer"));
-        cAcc = bank.getAccount(this.cid);
+    public void aCustomerWithId(String cpr) {
+        this.cCpr = cpr;
+        this.cBId = bank.createAccount(new AccountCreationRequest(1000, cpr, "Cust", "Omer"));
+        cAcc = bank.getAccount(this.cBId);
     }
 
     @Given("a merchant with id {string}")
-    public void aMerchantWithId(String mid) {
-        this.mid = bank.createAccount(new AccountCreationRequest(1000, mid, "Mer", "Chant"));
-        mAcc = bank.getAccount(this.mid);
+    public void aMerchantWithId(String cpr) {
+        this.mCpr = cpr;
+        this.mBId = bank.createAccount(new AccountCreationRequest(1000, cpr, "Mer", "Chant"));
+        mAcc = bank.getAccount(this.mBId);
     }
 
     @When("the merchant initiates a payment for {int} kr by the customer")
     public void theMerchantInitiatesAPaymentForKrByTheCustomer(int amount) {
-        response = dtuPay.pay(amount, this.cid, this.mid);
+        response = dtuPay.pay(amount, this.cBId, this.mBId);
     }
 
     @Then("the payment is successful")
@@ -51,7 +54,7 @@ public class SimpleDTUPaySteps {
     @Then("the merchant has {int} kr less in his bank account")
     public void theMerchantHasKrLessInHisBankAccount(int amount) {
         int prevBal = mAcc.getBalance();
-        int currBal = bank.getAccount(this.mid).getBalance();
+        int currBal = bank.getAccount(this.mBId).getBalance();
 
         assertTrue((prevBal - amount) == currBal);
     }
@@ -59,14 +62,14 @@ public class SimpleDTUPaySteps {
     @Then("the customer has {int} kr more in his bank account")
     public void theCustomerHasKrMoreInHisBankAccount(int amount) {
         int prevBal = cAcc.getBalance();
-        int currBal = bank.getAccount(this.cid).getBalance();
+        int currBal = bank.getAccount(this.cBId).getBalance();
 
         assertTrue((prevBal + amount) == currBal);
     }
 
     @Given("a successful payment of {int} kr from customer {string} to merchant {string}")
     public void aSuccessfulPaymentOfKrFromCustomerToMerchant(int amount, String customerId, String merchantId) {
-        response = dtuPay.pay(amount, this.cid, this.mid);
+        response = dtuPay.pay(amount, this.cBId, this.mBId);
         assertTrue(response.isSuccessful());
     }
 
@@ -81,8 +84,8 @@ public class SimpleDTUPaySteps {
         boolean found = false;
         for (Payment payment : this.list) {
             if (payment.getAmount() == amount &&
-                    payment.getCustomerId().equals(cid) &&
-                    payment.getMerchantId().equals(mid)) {
+                    payment.getCustomerId().equals(cBId) &&
+                    payment.getMerchantId().equals(mBId)) {
                 found = true;
                 break;
             }
@@ -93,12 +96,12 @@ public class SimpleDTUPaySteps {
 
     @Given("an unregistered customer with id {string}")
     public void anUnregisteredCustomerWithId(String cid) {
-        this.cid = UUID.randomUUID().toString();
+        this.cBId = UUID.randomUUID().toString();
     }
 
     @Given("an unregistered merchant with id {string}")
     public void anUnregisteredMerchantWithId(String mid) {
-        this.mid = UUID.randomUUID().toString();
+        this.mBId = UUID.randomUUID().toString();
     }
 
     @Then("the payment is not successful")
@@ -111,19 +114,19 @@ public class SimpleDTUPaySteps {
         assertEquals(errorMessage, this.response.getMessage());
     }
 
-    @When("the account is registered")
+    @When("the customer is registered")
     public void theAccountIsRegistered() {
-        response = dtuPay.register(this.cid);
+        response = dtuPay.registerCustomer(this.cCpr, this.cBId);
     }
 
-    @Then("the account registration is successful")
+    @Then("the customer registration is successful")
     public void theAccountRegistrationIsSuccessful() {
         assertTrue(response.isSuccessful());
     }
 
     @After
     public void removeBankAccounts() {
-        bank.deleteAccount(cid);
-        bank.deleteAccount(mid);
+        bank.deleteAccount(cBId);
+        bank.deleteAccount(mBId);
     }
 }

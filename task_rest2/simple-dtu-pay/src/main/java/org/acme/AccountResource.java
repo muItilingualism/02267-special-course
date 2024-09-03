@@ -1,10 +1,12 @@
 package org.acme;
 
+import org.acme.model.AccountRegistrationRequest;
 import org.acme.model.exception.UnknownBankAccountIdException;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
 import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -18,10 +20,20 @@ public class AccountResource {
     AccountService accountService;
 
     @POST
-    @Path("/{bankAccountId}")
+    @Path("/customers")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response registerAccount(String bankAccountId) {
-        accountService.processAccountRegistration(bankAccountId);
+    public Response registerCustomerAccount(AccountRegistrationRequest account) {
+        accountService.processCustomerAccountRegistration(account);
+        return Response.ok().build();
+    }
+
+    @POST
+    @Path("/merchants")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response registerMerchantAccount(AccountRegistrationRequest account) {
+        accountService.processMerchantAccountRegistration(account);
         return Response.ok().build();
     }
 

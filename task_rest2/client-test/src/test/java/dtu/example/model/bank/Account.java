@@ -1,4 +1,4 @@
-package dtu.example.model;
+package dtu.example.model.bank;
 
 import java.util.List;
 

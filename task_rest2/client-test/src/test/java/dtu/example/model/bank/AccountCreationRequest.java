@@ -1,4 +1,4 @@
-package dtu.example.model;
+package dtu.example.model.bank;
 
 public class AccountCreationRequest {
     private int balance;

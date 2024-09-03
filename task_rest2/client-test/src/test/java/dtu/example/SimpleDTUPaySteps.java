@@ -7,10 +7,10 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 import java.util.UUID;
 
-import dtu.example.model.Account;
-import dtu.example.model.AccountCreationRequest;
 import dtu.example.model.Payment;
 import dtu.example.model.ResponseResult;
+import dtu.example.model.bank.Account;
+import dtu.example.model.bank.AccountCreationRequest;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;

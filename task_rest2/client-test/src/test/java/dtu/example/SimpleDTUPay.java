@@ -26,7 +26,7 @@ public class SimpleDTUPay {
         WebTarget target = client.target("http://localhost:8080/payments");
 
         Response response = target.request(MediaType.APPLICATION_JSON)
-                .post(Entity.entity(payment, MediaType.APPLICATION_JSON));
+                .post(Entity.entity(toJsonString(payment), MediaType.APPLICATION_JSON));
 
         int statusCode = response.getStatus();
         String message = response.readEntity(String.class);

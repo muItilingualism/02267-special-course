@@ -20,10 +20,12 @@ import jakarta.ws.rs.core.Response;
 
 public class SimpleDTUPay {
 
+    private static final String url = "http://localhost:8080";
+
     public ResponseResult pay(int amount, String customerId, String merchantId) {
         Payment payment = new Payment(amount, customerId, merchantId);
         Client client = ClientBuilder.newBuilder().build();
-        WebTarget target = client.target("http://localhost:8080/payments");
+        WebTarget target = client.target(url + "/payments");
 
         Response response = target.request(MediaType.APPLICATION_JSON)
                 .post(Entity.entity(toJsonString(payment), MediaType.APPLICATION_JSON));
@@ -38,7 +40,7 @@ public class SimpleDTUPay {
 
     public List<Payment> list() {
         Client client = ClientBuilder.newBuilder().build();
-        WebTarget target = client.target("http://localhost:8080/payments");
+        WebTarget target = client.target(url + "/payments");
 
         String response = target.request(MediaType.APPLICATION_JSON).get(String.class);
 
@@ -54,7 +56,7 @@ public class SimpleDTUPay {
     public ResponseResult registerCustomer(String customerId, String bankAccountId) {
         AccountRegistrationRequest request = new AccountRegistrationRequest("Cust", "Omer", customerId, bankAccountId);
         Client client = ClientBuilder.newBuilder().build();
-        WebTarget target = client.target("http://localhost:8080/accounts/customers");
+        WebTarget target = client.target(url + "/accounts/customers");
 
         Response response = target.request(MediaType.APPLICATION_JSON)
                 .post(Entity.entity(toJsonString(request), MediaType.APPLICATION_JSON));
@@ -70,7 +72,7 @@ public class SimpleDTUPay {
     public ResponseResult registerMerchant(String merchantId, String bankAccountId) {
         AccountRegistrationRequest request = new AccountRegistrationRequest("Mer", "Chant", merchantId, bankAccountId);
         Client client = ClientBuilder.newBuilder().build();
-        WebTarget target = client.target("http://localhost:8080/accounts/merchants");
+        WebTarget target = client.target(url + "/accounts/merchants");
 
         Response response = target.request(MediaType.APPLICATION_JSON)
                 .post(Entity.entity(toJsonString(request), MediaType.APPLICATION_JSON));

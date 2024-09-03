@@ -1,4 +1,4 @@
-package org.acme.model;
+package org.acme.model.bank;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
 

@@ -3,8 +3,8 @@ package org.acme;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.acme.model.Payment;
 import org.acme.model.PaymentRequest;
+import org.acme.model.bank.Payment;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import jakarta.enterprise.context.ApplicationScoped;

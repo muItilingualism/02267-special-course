@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.acme.model.Account;
+import org.acme.model.bank.Account;
 import org.acme.model.exception.UnknownBankAccountIdException;
 
 import jakarta.enterprise.context.ApplicationScoped;

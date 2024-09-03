@@ -2,8 +2,8 @@ package org.acme;
 
 import java.util.Optional;
 
-import org.acme.model.Account;
-import org.acme.model.Payment;
+import org.acme.model.bank.Account;
+import org.acme.model.bank.Payment;
 import org.acme.model.exception.MoneyTransferException;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 

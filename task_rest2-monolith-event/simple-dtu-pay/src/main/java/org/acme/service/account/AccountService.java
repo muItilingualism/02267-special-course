@@ -10,8 +10,8 @@ import org.acme.model.AccountRegistrationRequest;
 import org.acme.model.Customer;
 import org.acme.model.Merchant;
 import org.acme.model.exception.UnknownBankAccountIdException;
-import org.acme.service.bank.BankService;
 
+import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -20,32 +20,38 @@ public class AccountService {
     private List<Account> registeredAccounts = new ArrayList<>();
 
     @Inject
-    BankService bankService;
+    BankAccountValidationEmitter validationEmitter;
 
-    public String processCustomerAccountRegistration(AccountRegistrationRequest account) {
-        if (isValid(account.getBankAccountId())) {
-            String id = generateAccountId();
-            registerAccount(new Customer(id, account.getFirstName(), account.getLastName(), account.getCpr(),
-                    account.getBankAccountId()));
-            return id;
-        } else {
-            throw new UnknownBankAccountIdException(account.getBankAccountId());
-        }
+    public Uni<String> processCustomerAccountRegistration(AccountRegistrationRequest account) {
+        return isValid(account.getBankAccountId())
+                .onItem().transform(valid -> {
+                    if (valid) {
+                        String id = generateAccountId();
+                        registerAccount(new Customer(id, account.getFirstName(), account.getLastName(), account.getCpr(),
+                                account.getBankAccountId()));
+                        return id;
+                    } else {
+                        throw new UnknownBankAccountIdException(account.getBankAccountId());
+                    }
+                });
     }
 
-    public String processMerchantAccountRegistration(AccountRegistrationRequest account) {
-        if (isValid(account.getBankAccountId())) {
-            String id = generateAccountId();
-            registerAccount(new Merchant(id, account.getFirstName(), account.getLastName(), account.getCpr(),
-                    account.getBankAccountId()));
-            return id;
-        } else {
-            throw new UnknownBankAccountIdException(account.getBankAccountId());
-        }
+    public Uni<String> processMerchantAccountRegistration(AccountRegistrationRequest account) {
+        return isValid(account.getBankAccountId())
+                .onItem().transform(valid -> {
+                    if (valid) {
+                        String id = generateAccountId();
+                        registerAccount(new Merchant(id, account.getFirstName(), account.getLastName(), account.getCpr(),
+                                account.getBankAccountId()));
+                        return id;
+                    } else {
+                        throw new UnknownBankAccountIdException(account.getBankAccountId());
+                    }
+                });
     }
 
-    public boolean isValid(String bankAccountId) {
-        return bankService.getAccount(bankAccountId).isPresent();
+    private Uni<Boolean> isValid(String bankAccountId) {
+        return validationEmitter.requestValidation(bankAccountId);
     }
 
     private String generateAccountId() {

@@ -5,6 +5,7 @@ import org.acme.model.exception.UnknownBankAccountIdException;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
+import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -22,9 +23,9 @@ public class CustomerResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response registerCustomerAccount(AccountRegistrationRequest account) {
-        String id = accountService.processCustomerAccountRegistration(account);
-        return Response.ok(id).build();
+    public Uni<Response> registerCustomerAccount(AccountRegistrationRequest account) {
+        return accountService.processCustomerAccountRegistration(account)
+                .onItem().transform(id -> Response.ok(id).build());
     }
 
     @ServerExceptionMapper

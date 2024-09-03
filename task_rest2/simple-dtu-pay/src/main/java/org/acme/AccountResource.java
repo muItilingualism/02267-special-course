@@ -24,8 +24,8 @@ public class AccountResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response registerCustomerAccount(AccountRegistrationRequest account) {
-        accountService.processCustomerAccountRegistration(account);
-        return Response.ok().build();
+        String id = accountService.processCustomerAccountRegistration(account);
+        return Response.ok(id).build();
     }
 
     @POST
@@ -33,8 +33,8 @@ public class AccountResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response registerMerchantAccount(AccountRegistrationRequest account) {
-        accountService.processMerchantAccountRegistration(account);
-        return Response.ok().build();
+        String id = accountService.processMerchantAccountRegistration(account);
+        return Response.ok(id).build();
     }
 
     @ServerExceptionMapper

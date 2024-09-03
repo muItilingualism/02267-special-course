@@ -19,6 +19,7 @@ import io.cucumber.java.en.When;
 public class SimpleDTUPaySteps {
     String cCpr, mCpr;
     String cBankId, mBankId;
+    String cId, mId;
     SimpleDTUPay dtuPay = new SimpleDTUPay();
     ResponseResult response;
     List<Payment> list;
@@ -30,6 +31,7 @@ public class SimpleDTUPaySteps {
     public void aCustomerWithId(String cpr) {
         this.cCpr = cpr;
         this.cBankId = bank.createAccount(new AccountCreationRequest(1000, cpr, "Cust", "Omer"));
+        this.cId = dtuPay.registerCustomer(this.cCpr, this.cBankId).getMessage();
         cBankAccount = bank.getAccount(this.cBankId);
     }
 
@@ -37,6 +39,7 @@ public class SimpleDTUPaySteps {
     public void aMerchantWithId(String cpr) {
         this.mCpr = cpr;
         this.mBankId = bank.createAccount(new AccountCreationRequest(1000, cpr, "Mer", "Chant"));
+        this.mId = dtuPay.registerMerchant(this.mCpr, this.mBankId).getMessage();
         mBankAccount = bank.getAccount(this.mBankId);
     }
 

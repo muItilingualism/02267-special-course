@@ -20,21 +20,23 @@ public class AccountService {
     @Inject
     BankService bankService;
 
-    public void processCustomerAccountRegistration(AccountRegistrationRequest account) {
+    public String processCustomerAccountRegistration(AccountRegistrationRequest account) {
         if (isValid(account.getBankAccountId())) {
             String id = generateAccountId();
             registerAccount(new Customer(id, account.getFirstName(), account.getLastName(), account.getCpr(),
                     account.getBankAccountId()));
+            return id;
         } else {
             throw new UnknownBankAccountIdException(account.getBankAccountId());
         }
     }
 
-    public void processMerchantAccountRegistration(AccountRegistrationRequest account) {
+    public String processMerchantAccountRegistration(AccountRegistrationRequest account) {
         if (isValid(account.getBankAccountId())) {
             String id = generateAccountId();
             registerAccount(new Merchant(id, account.getFirstName(), account.getLastName(), account.getCpr(),
                     account.getBankAccountId()));
+            return id;
         } else {
             throw new UnknownBankAccountIdException(account.getBankAccountId());
         }

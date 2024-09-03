@@ -40,6 +40,7 @@ public class PaymentResource {
 
     @ServerExceptionMapper
     public RestResponse<String> mapException(MoneyTransferException x) {
+        System.out.println("500, Failed to transfer money with error " + x.status + " and issue " + x.message);
         return RestResponse.status(Response.Status.INTERNAL_SERVER_ERROR, "Failed to transfer money with error " + x.status + " and issue " + x.message);
     }
 

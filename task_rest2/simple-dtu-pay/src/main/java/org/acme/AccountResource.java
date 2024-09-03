@@ -39,6 +39,7 @@ public class AccountResource {
 
     @ServerExceptionMapper
     public RestResponse<String> mapException(UnknownBankAccountIdException x) {
+        System.out.println("Unknown bank account id: " + x.id);
         return RestResponse.status(Response.Status.NOT_FOUND, "Unknown bank account id: " + x.id);
     }
 }

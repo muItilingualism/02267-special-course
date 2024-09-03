@@ -1,4 +1,4 @@
-package org.acme;
+package org.acme.service.account;
 
 import org.acme.model.AccountRegistrationRequest;
 import org.acme.model.exception.UnknownBankAccountIdException;

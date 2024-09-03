@@ -1,4 +1,4 @@
-package org.acme;
+package org.acme.service.payment;
 
 import org.acme.model.PaymentRequest;
 import org.acme.model.exception.MoneyTransferException;

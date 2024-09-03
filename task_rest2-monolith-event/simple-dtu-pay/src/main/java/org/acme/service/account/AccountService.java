@@ -1,4 +1,4 @@
-package org.acme;
+package org.acme.service.account;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +10,7 @@ import org.acme.model.AccountRegistrationRequest;
 import org.acme.model.Customer;
 import org.acme.model.Merchant;
 import org.acme.model.exception.UnknownBankAccountIdException;
+import org.acme.service.bank.BankService;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;

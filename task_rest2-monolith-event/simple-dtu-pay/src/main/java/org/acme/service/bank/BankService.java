@@ -1,4 +1,4 @@
-package org.acme;
+package org.acme.service.bank;
 
 import java.util.Optional;
 

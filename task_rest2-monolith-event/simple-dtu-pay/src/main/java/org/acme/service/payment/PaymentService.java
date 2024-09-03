@@ -1,4 +1,4 @@
-package org.acme;
+package org.acme.service.payment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,8 @@ import org.acme.model.PaymentRequest;
 import org.acme.model.bank.Payment;
 import org.acme.model.exception.UnknownCustomerException;
 import org.acme.model.exception.UnknownMerchantException;
+import org.acme.service.account.AccountService;
+import org.acme.service.bank.BankService;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import jakarta.enterprise.context.ApplicationScoped;

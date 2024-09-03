@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.acme.model.PaymentRequest;
 import org.acme.model.bank.Payment;
+import org.acme.model.exception.UnknownCustomerException;
+import org.acme.model.exception.UnknownMerchantException;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -20,14 +22,23 @@ public class PaymentService {
     @Inject
     BankService bankService;
 
+    @Inject
+    AccountService accountService;
+
     public void processPayment(PaymentRequest paymentRequest) {
         paymentsRequests.add(paymentRequest);
 
+        String customerId = paymentRequest.getCustomerId();
+        String merchantId = paymentRequest.getMerchantId();
+
+        String customerBankId = accountService.getAccountBankId(customerId).orElseThrow(() -> new UnknownCustomerException(customerId));
+        String mechantBankId = accountService.getAccountBankId(merchantId).orElseThrow(() -> new UnknownMerchantException(merchantId));
+
         Payment payment = new Payment(paymentRequest.getAmount(),
-                paymentRequest.getCustomerId(),
-                paymentRequest.getMerchantId(),
+                customerBankId,
+                mechantBankId,
                 String.format("TRANSACTION OF %d BY %s TO %s",
-                        paymentRequest.getAmount(), paymentRequest.getCustomerId(), paymentRequest.getMerchantId()));
+                        paymentRequest.getAmount(), customerId, merchantId));
         bankService.transferMoney(payment);
     }
 

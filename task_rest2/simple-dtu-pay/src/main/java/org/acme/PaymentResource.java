@@ -28,18 +28,6 @@ public class PaymentResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response payment(PaymentRequest paymentRequest) {
-        if (!accountService.isValid(paymentRequest.getCustomerId())) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("customer id is unknown")
-                    .build();
-        }
-
-        if (!accountService.isValid(paymentRequest.getMerchantId())) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("merchant id is unknown")
-                    .build();
-        }
-
         paymentService.processPayment(paymentRequest);
         return Response.ok().build();
     }

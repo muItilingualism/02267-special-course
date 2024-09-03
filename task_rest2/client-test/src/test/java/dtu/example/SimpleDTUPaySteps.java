@@ -45,7 +45,7 @@ public class SimpleDTUPaySteps {
 
     @When("the merchant initiates a payment for {int} kr by the customer")
     public void theMerchantInitiatesAPaymentForKrByTheCustomer(int amount) {
-        response = dtuPay.pay(amount, this.cBankId, this.mBankId);
+        response = dtuPay.pay(amount, this.cId, this.mId);
     }
 
     @Then("the payment is successful")
@@ -71,7 +71,7 @@ public class SimpleDTUPaySteps {
 
     @Given("a successful payment of {int} kr from customer {string} to merchant {string}")
     public void aSuccessfulPaymentOfKrFromCustomerToMerchant(int amount, String customerId, String merchantId) {
-        response = dtuPay.pay(amount, this.cBankId, this.mBankId);
+        response = dtuPay.pay(amount, this.cId, this.mId);
         assertTrue(response.isSuccessful());
     }
 
@@ -86,8 +86,8 @@ public class SimpleDTUPaySteps {
         boolean found = false;
         for (Payment payment : this.list) {
             if (payment.getAmount() == amount &&
-                    payment.getCustomerId().equals(cBankId) &&
-                    payment.getMerchantId().equals(mBankId)) {
+                    payment.getCustomerId().equals(cId) &&
+                    payment.getMerchantId().equals(mId)) {
                 found = true;
                 break;
             }

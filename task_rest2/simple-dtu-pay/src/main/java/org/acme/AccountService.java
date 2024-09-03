@@ -2,6 +2,7 @@ package org.acme;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.acme.model.Account;
@@ -52,5 +53,14 @@ public class AccountService {
 
     private void registerAccount(Account account) {
         registeredAccounts.add(account);
+    }
+
+    public Optional<String> getAccountBankId(String accountId) {
+        for (Account account : registeredAccounts) {
+            if (account.getId().equals(accountId)) {
+                return Optional.of(account.getBankAccountId());
+            }
+        }
+        return Optional.empty();
     }
 }

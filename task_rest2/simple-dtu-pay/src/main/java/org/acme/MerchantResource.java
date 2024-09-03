@@ -13,18 +13,17 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("/accounts")
-public class AccountResource {
+@Path("/merchants")
+public class MerchantResource {
 
     @Inject
     AccountService accountService;
 
     @POST
-    @Path("/customers")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response registerCustomerAccount(AccountRegistrationRequest account) {
-        String id = accountService.processCustomerAccountRegistration(account);
+    public Response registerMerchantAccount(AccountRegistrationRequest account) {
+        String id = accountService.processMerchantAccountRegistration(account);
         return Response.ok(id).build();
     }
 

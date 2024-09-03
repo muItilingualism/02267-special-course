@@ -2,6 +2,7 @@ package dtu.example;
 
 import java.util.Optional;
 
+import dtu.example.model.Account;
 import dtu.example.model.AccountCreationRequest;
 import io.cucumber.core.internal.com.fasterxml.jackson.core.JsonProcessingException;
 import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,6 +47,23 @@ public class Bank {
         response.close();
         client.close();
     }
+
+    public Account getAccount(String accountId) {
+        Client client = ClientBuilder.newBuilder().build();
+        WebTarget target = client.target("http://localhost:8081" + "/rest/accounts/" + accountId);
+
+        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        if (response.getStatus() != 200) {
+            throw new Error("Failed to get bank account by bankaccountID: " + accountId);
+        }
+
+        Account account = toObject(response.readEntity(String.class), Account.class).get();
+
+        response.close();
+        client.close();
+
+        return account;
+    } 
 
     private String toJsonString(Object object) {
         ObjectMapper objectMapper = new ObjectMapper();

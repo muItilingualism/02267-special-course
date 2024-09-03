@@ -3,8 +3,8 @@ package dtu.example;
 import java.util.ArrayList;
 import java.util.List;
 
-import dtu.example.model.Payment;
-import dtu.example.model.ResponseResult;
+import dtu.example.model.simpledtupay.Payment;
+import dtu.example.model.simpledtupay.ResponseResult;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.ws.rs.client.Client;

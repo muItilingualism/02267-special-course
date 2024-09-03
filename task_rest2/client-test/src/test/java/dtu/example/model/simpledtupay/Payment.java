@@ -1,4 +1,4 @@
-package dtu.example.model;
+package dtu.example.model.simpledtupay;
 
 public class Payment {
     private int amount;

@@ -49,4 +49,9 @@ public class BankService {
             throw new MoneyTransferException(response.getStatus(), response.readEntity(String.class));
         }
     }
+
+    public boolean validateAccount(String accountId) {
+        Optional<Account> account = getAccount(accountId);
+        return account.isPresent();
+    }
 }

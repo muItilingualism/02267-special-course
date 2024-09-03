@@ -13,14 +13,13 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("/accounts")
-public class AccountResource {
+@Path("/customers")
+public class CustomerResource {
 
     @Inject
     AccountService accountService;
 
     @POST
-    @Path("/customers")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response registerCustomerAccount(AccountRegistrationRequest account) {

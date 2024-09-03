@@ -56,7 +56,7 @@ public class SimpleDTUPay {
     public ResponseResult registerCustomer(String customerId, String bankAccountId) {
         AccountRegistrationRequest request = new AccountRegistrationRequest("Cust", "Omer", customerId, bankAccountId);
         Client client = ClientBuilder.newBuilder().build();
-        WebTarget target = client.target(url + "/accounts/customers");
+        WebTarget target = client.target(url + "/customers");
 
         Response response = target.request(MediaType.APPLICATION_JSON)
                 .post(Entity.entity(toJsonString(request), MediaType.APPLICATION_JSON));

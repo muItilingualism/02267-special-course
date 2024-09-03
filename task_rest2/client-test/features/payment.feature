@@ -4,6 +4,8 @@ Scenario: Successful Payment
     And a merchant with id "mid1"
     When the merchant initiates a payment for 10 kr by the customer
     Then the payment is successful
+    And the merchant has 10 kr less in his bank account
+    And the customer has 10 kr more in his bank account
 
 Scenario: List of payments
     Given a customer with id "cid1"

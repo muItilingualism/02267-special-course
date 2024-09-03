@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 import java.util.UUID;
 
+import dtu.example.model.Account;
 import dtu.example.model.AccountCreationRequest;
 import dtu.example.model.Payment;
 import dtu.example.model.ResponseResult;
@@ -20,17 +21,21 @@ public class SimpleDTUPaySteps {
     SimpleDTUPay dtuPay = new SimpleDTUPay();
     ResponseResult response;
     List<Payment> list;
+    Account cAcc;
+    Account mAcc;
 
     Bank bank = new Bank();
 
     @Given("a customer with id {string}")
     public void aCustomerWithId(String cid) {
         this.cid = bank.createAccount(new AccountCreationRequest(1000, cid, "Cust", "Omer"));
+        cAcc = bank.getAccount(this.cid);
     }
 
     @Given("a merchant with id {string}")
     public void aMerchantWithId(String mid) {
         this.mid = bank.createAccount(new AccountCreationRequest(1000, mid, "Mer", "Chant"));
+        mAcc = bank.getAccount(this.mid);
     }
 
     @When("the merchant initiates a payment for {int} kr by the customer")
@@ -41,6 +46,22 @@ public class SimpleDTUPaySteps {
     @Then("the payment is successful")
     public void thePaymentIsSuccessful() {
         assertTrue(response.isSuccessful());
+    }
+
+    @Then("the merchant has {int} kr less in his bank account")
+    public void theMerchantHasKrLessInHisBankAccount(int amount) {
+        int prevBal = mAcc.getBalance();
+        int currBal = bank.getAccount(this.mid).getBalance();
+
+        assertTrue((prevBal - amount) == currBal);
+    }
+
+    @Then("the customer has {int} kr more in his bank account")
+    public void theCustomerHasKrMoreInHisBankAccount(int amount) {
+        int prevBal = cAcc.getBalance();
+        int currBal = bank.getAccount(this.cid).getBalance();
+
+        assertTrue((prevBal + amount) == currBal);
     }
 
     @Given("a successful payment of {int} kr from customer {string} to merchant {string}")

@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import dtu.example.model.bank.Account;
 import dtu.example.model.bank.AccountCreationRequest;
+import dtu.example.model.bank.User;
 import dtu.example.model.simpledtupay.Payment;
 import dtu.example.model.simpledtupay.ResponseResult;
 import io.cucumber.java.After;
@@ -30,7 +31,7 @@ public class SimpleDTUPaySteps {
     @Given("a customer with id {string}")
     public void aCustomerWithId(String cpr) {
         this.cCpr = cpr;
-        this.cBankId = bank.createAccount(new AccountCreationRequest(1000, cpr, "Cust", "Omer"));
+        this.cBankId = bank.createAccount(new AccountCreationRequest(1000, new User(cpr, "Cust", "Omer")));
         this.cId = dtuPay.registerCustomer(this.cCpr, this.cBankId).getMessage();
         cBankAccount = bank.getAccount(this.cBankId);
     }
@@ -38,7 +39,7 @@ public class SimpleDTUPaySteps {
     @Given("a merchant with id {string}")
     public void aMerchantWithId(String cpr) {
         this.mCpr = cpr;
-        this.mBankId = bank.createAccount(new AccountCreationRequest(1000, cpr, "Mer", "Chant"));
+        this.mBankId = bank.createAccount(new AccountCreationRequest(1000, new User(cpr, "Mer", "Chant")));
         this.mId = dtuPay.registerMerchant(this.mCpr, this.mBankId).getMessage();
         mBankAccount = bank.getAccount(this.mBankId);
     }

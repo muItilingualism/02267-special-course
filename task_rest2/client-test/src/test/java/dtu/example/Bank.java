@@ -15,9 +15,11 @@ import jakarta.ws.rs.core.Response;
 
 public class Bank {
 
+    private static final String url = "http://localhost:8081";
+
     public String createAccount(AccountCreationRequest account) {
         Client client = ClientBuilder.newBuilder().build();
-        WebTarget target = client.target("http://localhost:8081" + "/rest/accounts");
+        WebTarget target = client.target(url + "/rest/accounts");
 
         Response response = target.request(MediaType.TEXT_PLAIN)
                 // .post(Entity.entity(account, MediaType.APPLICATION_JSON)); direct object->json does not work???
@@ -37,7 +39,7 @@ public class Bank {
 
     public void deleteAccount(String accountId) {
         Client client = ClientBuilder.newBuilder().build();
-        WebTarget target = client.target("http://localhost:8081" + "/rest/accounts/" + accountId);
+        WebTarget target = client.target(url + "/rest/accounts/" + accountId);
 
         Response response = target.request(MediaType.TEXT_PLAIN).delete();
         if (response.getStatus() != 204) {
@@ -50,7 +52,7 @@ public class Bank {
 
     public Account getAccount(String accountId) {
         Client client = ClientBuilder.newBuilder().build();
-        WebTarget target = client.target("http://localhost:8081" + "/rest/accounts/" + accountId);
+        WebTarget target = client.target(url + "/rest/accounts/" + accountId);
 
         Response response = target.request(MediaType.APPLICATION_JSON).get();
         if (response.getStatus() != 200) {

@@ -29,8 +29,8 @@ main() {
     echo "Starting SimpleDTUPay service..."
     run_simpledtupay
     
-    echo "Waiting for 10 s for SimpleDTUPay..."
-    sleep 10
+    echo "Waiting for 3 s for SimpleDTUPay..."
+    sleep 3
     
     echo "Running end-to-end tests..."
     run_client_tests

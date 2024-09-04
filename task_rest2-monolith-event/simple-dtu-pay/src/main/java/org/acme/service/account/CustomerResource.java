@@ -1,5 +1,7 @@
 package org.acme.service.account;
 
+import java.util.concurrent.TimeoutException;
+
 import org.acme.model.AccountRegistrationRequest;
 import org.acme.model.exception.UnknownBankAccountIdException;
 import org.jboss.resteasy.reactive.RestResponse;
@@ -23,7 +25,7 @@ public class CustomerResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Uni<Response> registerCustomerAccount(AccountRegistrationRequest account) {
+    public Uni<Response> registerCustomerAccount(AccountRegistrationRequest account) throws TimeoutException {
         return accountService.processCustomerAccountRegistration(account)
                 .onItem().transform(id -> Response.ok(id).build());
     }
@@ -32,5 +34,11 @@ public class CustomerResource {
     public RestResponse<String> mapException(UnknownBankAccountIdException x) {
         System.out.println("Unknown bank account id: " + x.id);
         return RestResponse.status(Response.Status.NOT_FOUND, "Unknown bank account id: " + x.id);
+    }
+
+    @ServerExceptionMapper
+    public RestResponse<String> mapException(TimeoutException x) {
+        System.out.println("Timeout occurred: " + x.getMessage());
+        return RestResponse.status(Response.Status.INTERNAL_SERVER_ERROR, x.getMessage());
     }
 }

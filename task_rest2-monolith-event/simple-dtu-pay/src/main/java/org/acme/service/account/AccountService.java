@@ -47,10 +47,6 @@ public class AccountService {
             });
     }
 
-    private Uni<Boolean> isValid(String bankAccountId) {
-        return validationEmitter.requestValidation(bankAccountId);
-    }
-
     private String generateAccountId() {
         return UUID.randomUUID().toString();
     }

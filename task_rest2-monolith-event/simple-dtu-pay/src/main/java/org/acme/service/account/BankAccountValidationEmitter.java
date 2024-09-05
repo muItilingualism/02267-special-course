@@ -6,11 +6,13 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeoutException;
 
+import org.acme.model.event.BankAccountValidationEvent;
+import org.acme.model.event.BankAccountValidationEventType;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 
 import io.smallrye.mutiny.Uni;
-import io.vertx.core.json.JsonObject;
+import io.smallrye.reactive.messaging.annotations.Broadcast;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -18,8 +20,9 @@ import jakarta.inject.Inject;
 public class BankAccountValidationEmitter {
 
     @Inject
-    @Channel("bank-account-validation-requests")
-    Emitter<JsonObject> bankAccountValidationEmitter;
+    @Channel("bank-account-validation-events")
+    @Broadcast
+    Emitter<BankAccountValidationEvent> bankAccountValidationEmitter;
 
     private final ConcurrentHashMap<String, CompletableFuture<Boolean>> pendingValidations = new ConcurrentHashMap<>();
 
@@ -28,10 +31,10 @@ public class BankAccountValidationEmitter {
         CompletableFuture<Boolean> future = new CompletableFuture<>();
         pendingValidations.put(correlationId, future);
 
-        JsonObject message = new JsonObject()
-                .put("bankAccountId", bankAccountId)
-                .put("correlationId", correlationId);
-        bankAccountValidationEmitter.send(message);
+        bankAccountValidationEmitter.send(
+                new BankAccountValidationEvent(
+                        correlationId, BankAccountValidationEventType.BANK_ACCOUNT_VALIDATION_REQUESTED,
+                        bankAccountId));
 
         return Uni.createFrom().completionStage(future)
                 .ifNoItem().after(Duration.ofSeconds(5))

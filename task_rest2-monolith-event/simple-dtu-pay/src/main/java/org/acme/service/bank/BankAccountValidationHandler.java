@@ -1,11 +1,13 @@
 package org.acme.service.bank;
 
+import org.acme.model.event.BankAccountValidationEvent;
+import org.acme.model.event.BankAccountValidationEventType;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 
 import io.smallrye.reactive.messaging.annotations.Blocking;
-import io.vertx.core.json.JsonObject;
+import io.smallrye.reactive.messaging.annotations.Broadcast;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -16,21 +18,24 @@ public class BankAccountValidationHandler {
     BankService bankService;
 
     @Inject
-    @Channel("bank-account-validation-results")
-    Emitter<JsonObject> validationResultEmitter;
+    @Channel("bank-account-validation-events")
+    @Broadcast
+    Emitter<BankAccountValidationEvent> validationResultEmitter;
 
-    @Incoming("bank-account-validation-requests")
+    @Incoming("bank-account-validation-events")
     @Blocking
-    public void handleValidationRequest(JsonObject message) {
-        String bankAccountId = message.getString("bankAccountId");
-        String correlationId = message.getString("correlationId");
+    public void handleValidationRequest(BankAccountValidationEvent event) {
+        String bankAccountId = event.getBankAccountId();
+        String correlationId = event.getCorrelationId();
         boolean isValid = bankService.validateAccount(bankAccountId);
 
-        JsonObject result = new JsonObject()
-                .put("bankAccountId", bankAccountId)
-                .put("correlationId", correlationId)
-                .put("isValid", isValid);
+        BankAccountValidationEventType resultEventType = isValid
+                ? BankAccountValidationEventType.BANK_ACCOUNT_VALIDATION_SUCCEEDED
+                : BankAccountValidationEventType.BANK_ACCOUNT_VALIDATION_FAILED;
 
-        validationResultEmitter.send(result);
+        BankAccountValidationEvent resultEvent = new BankAccountValidationEvent(
+                correlationId, resultEventType, bankAccountId);
+        validationResultEmitter.send(resultEvent);
+
     }
 }

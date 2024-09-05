@@ -1,5 +1,6 @@
 package org.acme.service.payment;
 
+import org.acme.facade.SimpleDTUPayFacade;
 import org.acme.model.PaymentRequest;
 import org.acme.model.exception.MoneyTransferException;
 import org.acme.model.exception.UnknownCustomerException;
@@ -20,20 +21,20 @@ import jakarta.ws.rs.core.Response;
 public class PaymentResource {
 
     @Inject
-    PaymentService paymentService;
+    SimpleDTUPayFacade dtuPayFacade;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response payment(PaymentRequest paymentRequest)
             throws UnknownCustomerException, UnknownMerchantException, MoneyTransferException {
-        paymentService.processPayment(paymentRequest);
+        dtuPayFacade.processPayment(paymentRequest);
         return Response.ok().build();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response list() {
-        return Response.ok(paymentService.getAllPayments()).build();
+        return Response.ok(dtuPayFacade.getAllPayments()).build();
     }
 
     @ServerExceptionMapper

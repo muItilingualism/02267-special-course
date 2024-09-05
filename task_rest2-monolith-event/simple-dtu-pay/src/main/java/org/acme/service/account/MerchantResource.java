@@ -1,5 +1,6 @@
 package org.acme.service.account;
 
+import org.acme.facade.SimpleDTUPayFacade;
 import org.acme.model.AccountRegistrationRequest;
 import org.acme.model.exception.UnknownBankAccountIdException;
 import org.jboss.resteasy.reactive.RestResponse;
@@ -18,14 +19,13 @@ import jakarta.ws.rs.core.Response;
 public class MerchantResource {
 
     @Inject
-    AccountService accountService;
+    SimpleDTUPayFacade dtuPayFacade;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Uni<Response> registerMerchantAccount(AccountRegistrationRequest account) {
-        return accountService.processMerchantAccountRegistration(account)
-                .onItem().transform(id -> Response.ok(id).build());
+        return dtuPayFacade.processMerchantAccountRegistration(account);
     }
 
     @ServerExceptionMapper

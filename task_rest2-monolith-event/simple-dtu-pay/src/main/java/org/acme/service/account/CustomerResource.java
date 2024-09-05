@@ -2,6 +2,7 @@ package org.acme.service.account;
 
 import java.util.concurrent.TimeoutException;
 
+import org.acme.facade.SimpleDTUPayFacade;
 import org.acme.model.AccountRegistrationRequest;
 import org.acme.model.exception.UnknownBankAccountIdException;
 import org.jboss.resteasy.reactive.RestResponse;
@@ -20,15 +21,13 @@ import jakarta.ws.rs.core.Response;
 public class CustomerResource {
 
     @Inject
-    AccountService accountService;
+    SimpleDTUPayFacade dtuPayFacade;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Uni<Response> registerCustomerAccount(AccountRegistrationRequest account)
-            throws TimeoutException, UnknownBankAccountIdException {
-        return accountService.processCustomerAccountRegistration(account)
-                .onItem().transform(id -> Response.ok(id).build());
+    public Uni<Response> registerCustomerAccount(AccountRegistrationRequest account) {
+        return dtuPayFacade.processCustomerAccountRegistration(account);
     }
 
     @ServerExceptionMapper

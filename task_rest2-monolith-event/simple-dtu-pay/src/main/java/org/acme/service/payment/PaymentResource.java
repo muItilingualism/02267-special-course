@@ -37,19 +37,16 @@ public class PaymentResource {
 
     @ServerExceptionMapper
     public RestResponse<String> mapException(MoneyTransferException x) {
-        System.out.println("500, Failed to transfer money with error " + x.status + " and issue " + x.message);
         return RestResponse.status(Response.Status.INTERNAL_SERVER_ERROR, "Failed to transfer money with error " + x.status + " and issue " + x.message);
     }
 
     @ServerExceptionMapper
     public RestResponse<String> mapException(UnknownCustomerException x) {
-        System.out.println("400, customer id is unknown");
         return RestResponse.status(Response.Status.BAD_REQUEST, "customer id is unknown");
     }
 
     @ServerExceptionMapper
     public RestResponse<String> mapException(UnknownMerchantException x) {
-        System.out.println("400, merchant id is unknown");
         return RestResponse.status(Response.Status.BAD_REQUEST, "merchant id is unknown");
     }
 }

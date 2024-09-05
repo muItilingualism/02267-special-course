@@ -32,13 +32,11 @@ public class CustomerResource {
 
     @ServerExceptionMapper
     public RestResponse<String> mapException(UnknownBankAccountIdException x) {
-        System.out.println("Unknown bank account id: " + x.id);
         return RestResponse.status(Response.Status.NOT_FOUND, "Unknown bank account id: " + x.id);
     }
 
     @ServerExceptionMapper
     public RestResponse<String> mapException(TimeoutException x) {
-        System.out.println("Timeout occurred: " + x.getMessage());
-        return RestResponse.status(Response.Status.INTERNAL_SERVER_ERROR, x.getMessage());
+        return RestResponse.status(Response.Status.INTERNAL_SERVER_ERROR, "Timeout, the request took too long");
     }
 }

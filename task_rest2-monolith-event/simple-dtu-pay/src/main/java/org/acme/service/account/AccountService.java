@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.TimeoutException;
 
 import org.acme.model.Account;
 import org.acme.model.AccountRegistrationRequest;
@@ -24,27 +23,28 @@ public class AccountService {
     @Inject
     BankAccountValidationEmitter validationEmitter;
 
-    public Uni<String> processCustomerAccountRegistration(AccountRegistrationRequest account) throws TimeoutException {
-        return validationEmitter.requestValidation(account.getBankAccountId())
-            .onItem().transform(isValid -> {
-                if (!isValid) {
-                    throw new UnknownBankAccountIdException(account.getBankAccountId());
-                }
-                String id = generateAccountId();
-                registerAccount(new Customer(id, account.getFirstName(), account.getLastName(), account.getCpr(), account.getBankAccountId()));
-                return id;
-            });
+    public Uni<String> processCustomerAccountRegistration(AccountRegistrationRequest account)
+            throws UnknownBankAccountIdException {
+                return validationEmitter.requestValidation(account.getBankAccountId())
+                .onItem().transformToUni(isValid -> {
+                    if (!isValid) {
+                        return Uni.createFrom().failure(new UnknownBankAccountIdException(account.getBankAccountId()));
+                    }
+                    String id = generateAccountId();
+                    registerAccount(new Customer(id, account.getFirstName(), account.getLastName(), account.getCpr(), account.getBankAccountId()));
+                    return Uni.createFrom().item(id);
+                });
     }
 
     public Uni<String> processMerchantAccountRegistration(AccountRegistrationRequest account) {
         return validationEmitter.requestValidation(account.getBankAccountId())
-            .onItem().transform(isValid -> {
+            .onItem().transformToUni(isValid -> {
                 if (!isValid) {
-                    throw new UnknownBankAccountIdException(account.getBankAccountId());
+                    return Uni.createFrom().failure(new UnknownBankAccountIdException(account.getBankAccountId()));
                 }
                 String id = generateAccountId();
                 registerAccount(new Merchant(id, account.getFirstName(), account.getLastName(), account.getCpr(), account.getBankAccountId()));
-                return id;
+                return Uni.createFrom().item(id);
             });
     }
 

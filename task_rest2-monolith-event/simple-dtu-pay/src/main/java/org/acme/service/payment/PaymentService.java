@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.acme.model.PaymentRequest;
 import org.acme.model.bank.Payment;
+import org.acme.model.exception.MoneyTransferException;
 import org.acme.model.exception.UnknownCustomerException;
 import org.acme.model.exception.UnknownMerchantException;
 import org.acme.service.account.AccountService;
@@ -27,7 +28,7 @@ public class PaymentService {
     @Inject
     AccountService accountService;
 
-    public void processPayment(PaymentRequest paymentRequest) {
+    public void processPayment(PaymentRequest paymentRequest) throws UnknownCustomerException, UnknownMerchantException, MoneyTransferException {
         paymentsRequests.add(paymentRequest);
 
         String customerId = paymentRequest.getCustomerId();

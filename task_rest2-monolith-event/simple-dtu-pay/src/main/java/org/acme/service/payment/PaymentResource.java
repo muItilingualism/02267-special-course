@@ -24,7 +24,7 @@ public class PaymentResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response payment(PaymentRequest paymentRequest) {
+    public Response payment(PaymentRequest paymentRequest) throws UnknownCustomerException, UnknownMerchantException, MoneyTransferException {
         paymentService.processPayment(paymentRequest);
         return Response.ok().build();
     }

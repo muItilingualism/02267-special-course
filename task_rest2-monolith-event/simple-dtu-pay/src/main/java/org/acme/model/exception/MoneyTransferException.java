@@ -1,6 +1,6 @@
 package org.acme.model.exception;
 
-public class MoneyTransferException extends RuntimeException {
+public class MoneyTransferException extends Exception {
     public final int status;
     public final String message;
 

@@ -38,7 +38,7 @@ public class BankService {
         return Optional.of(account);
     }
 
-    public void transferMoney(Payment payment) {
+    public void transferMoney(Payment payment) throws MoneyTransferException {
         Client client = ClientBuilder.newBuilder().build();
         WebTarget target = client.target(bankUrl + "/rest/payments");
 

@@ -49,7 +49,7 @@ public class PaymentResource {
 
     @ServerExceptionMapper
     public RestResponse<String> mapException(UnknownMerchantException x) {
-        System.out.println("400, merchant id is unknon");
+        System.out.println("400, merchant id is unknown");
         return RestResponse.status(Response.Status.BAD_REQUEST, "merchant id is unknown");
     }
 }

@@ -24,7 +24,8 @@ public class SimpleDTUPayFacade {
     @Inject
     AccountService accountService;
 
-    public void processPayment(PaymentRequest paymentRequest) throws UnknownCustomerException, UnknownMerchantException, MoneyTransferException {
+    public void processPayment(PaymentRequest paymentRequest)
+            throws UnknownCustomerException, UnknownMerchantException, MoneyTransferException {
         paymentService.processPayment(paymentRequest);
     }
 
@@ -41,5 +42,4 @@ public class SimpleDTUPayFacade {
         return accountService.processMerchantAccountRegistration(account)
                 .onItem().transform(id -> Response.ok(id).build());
     }
-    
 }

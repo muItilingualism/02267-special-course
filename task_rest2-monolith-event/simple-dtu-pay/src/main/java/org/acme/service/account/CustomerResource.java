@@ -25,7 +25,8 @@ public class CustomerResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Uni<Response> registerCustomerAccount(AccountRegistrationRequest account) throws TimeoutException, UnknownBankAccountIdException {
+    public Uni<Response> registerCustomerAccount(AccountRegistrationRequest account)
+            throws TimeoutException, UnknownBankAccountIdException {
         return accountService.processCustomerAccountRegistration(account)
                 .onItem().transform(id -> Response.ok(id).build());
     }

@@ -28,14 +28,17 @@ public class PaymentService {
     @Inject
     AccountService accountService;
 
-    public void processPayment(PaymentRequest paymentRequest) throws UnknownCustomerException, UnknownMerchantException, MoneyTransferException {
+    public void processPayment(PaymentRequest paymentRequest)
+            throws UnknownCustomerException, UnknownMerchantException, MoneyTransferException {
         paymentsRequests.add(paymentRequest);
 
         String customerId = paymentRequest.getCustomerId();
         String merchantId = paymentRequest.getMerchantId();
 
-        String customerBankId = accountService.getAccountBankId(customerId).orElseThrow(() -> new UnknownCustomerException(customerId));
-        String mechantBankId = accountService.getAccountBankId(merchantId).orElseThrow(() -> new UnknownMerchantException(merchantId));
+        String customerBankId = accountService.getAccountBankId(customerId)
+                .orElseThrow(() -> new UnknownCustomerException(customerId));
+        String mechantBankId = accountService.getAccountBankId(merchantId)
+                .orElseThrow(() -> new UnknownMerchantException(merchantId));
 
         Payment payment = new Payment(paymentRequest.getAmount(),
                 customerBankId,

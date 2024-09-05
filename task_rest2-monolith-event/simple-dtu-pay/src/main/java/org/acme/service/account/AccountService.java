@@ -25,27 +25,29 @@ public class AccountService {
 
     public Uni<String> processCustomerAccountRegistration(AccountRegistrationRequest account)
             throws UnknownBankAccountIdException {
-                return validationEmitter.requestValidation(account.getBankAccountId())
+        return validationEmitter.requestValidation(account.getBankAccountId())
                 .onItem().transformToUni(isValid -> {
                     if (!isValid) {
                         return Uni.createFrom().failure(new UnknownBankAccountIdException(account.getBankAccountId()));
                     }
                     String id = generateAccountId();
-                    registerAccount(new Customer(id, account.getFirstName(), account.getLastName(), account.getCpr(), account.getBankAccountId()));
+                    registerAccount(new Customer(id, account.getFirstName(), account.getLastName(), account.getCpr(),
+                            account.getBankAccountId()));
                     return Uni.createFrom().item(id);
                 });
     }
 
     public Uni<String> processMerchantAccountRegistration(AccountRegistrationRequest account) {
         return validationEmitter.requestValidation(account.getBankAccountId())
-            .onItem().transformToUni(isValid -> {
-                if (!isValid) {
-                    return Uni.createFrom().failure(new UnknownBankAccountIdException(account.getBankAccountId()));
-                }
-                String id = generateAccountId();
-                registerAccount(new Merchant(id, account.getFirstName(), account.getLastName(), account.getCpr(), account.getBankAccountId()));
-                return Uni.createFrom().item(id);
-            });
+                .onItem().transformToUni(isValid -> {
+                    if (!isValid) {
+                        return Uni.createFrom().failure(new UnknownBankAccountIdException(account.getBankAccountId()));
+                    }
+                    String id = generateAccountId();
+                    registerAccount(new Merchant(id, account.getFirstName(), account.getLastName(), account.getCpr(),
+                            account.getBankAccountId()));
+                    return Uni.createFrom().item(id);
+                });
     }
 
     private String generateAccountId() {

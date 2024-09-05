@@ -24,7 +24,8 @@ public class PaymentResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response payment(PaymentRequest paymentRequest) throws UnknownCustomerException, UnknownMerchantException, MoneyTransferException {
+    public Response payment(PaymentRequest paymentRequest)
+            throws UnknownCustomerException, UnknownMerchantException, MoneyTransferException {
         paymentService.processPayment(paymentRequest);
         return Response.ok().build();
     }
@@ -37,7 +38,8 @@ public class PaymentResource {
 
     @ServerExceptionMapper
     public RestResponse<String> mapException(MoneyTransferException x) {
-        return RestResponse.status(Response.Status.INTERNAL_SERVER_ERROR, "Failed to transfer money with error " + x.status + " and issue " + x.message);
+        return RestResponse.status(Response.Status.INTERNAL_SERVER_ERROR,
+                "Failed to transfer money with error " + x.status + " and issue " + x.message);
     }
 
     @ServerExceptionMapper

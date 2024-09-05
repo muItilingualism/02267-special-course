@@ -1,4 +1,4 @@
-package org.acme.service.account;
+package org.acme.service.account.event;
 
 import java.time.Duration;
 import java.util.UUID;

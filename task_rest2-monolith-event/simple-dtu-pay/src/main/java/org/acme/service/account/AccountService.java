@@ -11,6 +11,7 @@ import org.acme.model.AccountRegistrationRequest;
 import org.acme.model.Customer;
 import org.acme.model.Merchant;
 import org.acme.model.exception.UnknownBankAccountIdException;
+import org.acme.service.account.event.BankAccountValidationEmitter;
 
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;

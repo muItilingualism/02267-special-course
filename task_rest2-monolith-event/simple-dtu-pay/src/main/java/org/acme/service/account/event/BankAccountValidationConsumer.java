@@ -1,4 +1,4 @@
-package org.acme.service.account;
+package org.acme.service.account.event;
 
 import org.acme.model.event.BankAccountValidationEvent;
 import org.eclipse.microprofile.reactive.messaging.Incoming;

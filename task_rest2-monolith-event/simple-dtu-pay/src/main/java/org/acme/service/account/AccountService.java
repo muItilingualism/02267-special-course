@@ -23,8 +23,7 @@ public class AccountService {
     @Inject
     BankAccountValidationEmitter validationEmitter;
 
-    public Uni<String> processCustomerAccountRegistration(AccountRegistrationRequest account)
-            throws UnknownBankAccountIdException {
+    public Uni<String> processCustomerAccountRegistration(AccountRegistrationRequest account) {
         return validationEmitter.requestValidation(account.getBankAccountId())
                 .onItem().transformToUni(isValid -> {
                     if (!isValid) {

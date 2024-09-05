@@ -18,11 +18,11 @@ public class BankAccountValidationHandler {
     BankService bankService;
 
     @Inject
-    @Channel("bank-account-validation-events")
+    @Channel("bank-account-validation-response")
     @Broadcast
     Emitter<BankAccountValidationEvent> validationResultEmitter;
 
-    @Incoming("bank-account-validation-events")
+    @Incoming("bank-account-validation-requests")
     @Blocking
     public void handleValidationRequest(BankAccountValidationEvent event) {
         String bankAccountId = event.getBankAccountId();
@@ -36,6 +36,5 @@ public class BankAccountValidationHandler {
         BankAccountValidationEvent resultEvent = new BankAccountValidationEvent(
                 correlationId, resultEventType, bankAccountId);
         validationResultEmitter.send(resultEvent);
-
     }
 }

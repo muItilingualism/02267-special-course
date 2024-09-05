@@ -12,20 +12,20 @@ public class BankAccountValidationConsumer {
     @Inject
     BankAccountValidationEmitter validationEmitter;
 
-    @Incoming("bank-account-validation-events")
+    @Incoming("bank-account-validation-response")
     public void consumeValidationResult(BankAccountValidationEvent event) {
         String correlationId = event.getCorrelationId();
-        
+
         switch (event.getEventType()) {
             case BANK_ACCOUNT_VALIDATION_SUCCEEDED:
                 validationEmitter.receiveValidationResult(correlationId, true);
-            break;
+                break;
             case BANK_ACCOUNT_VALIDATION_FAILED:
                 validationEmitter.receiveValidationResult(correlationId, false);
-            break;
+                break;
             case BANK_ACCOUNT_VALIDATION_REQUESTED:
                 // ignore
-            break;
+                break;
         }
     }
 }

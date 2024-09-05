@@ -20,7 +20,7 @@ import jakarta.inject.Inject;
 public class BankAccountValidationEmitter {
 
     @Inject
-    @Channel("bank-account-validation-events")
+    @Channel("bank-account-validation-requests")
     @Broadcast
     Emitter<BankAccountValidationEvent> bankAccountValidationEmitter;
 
@@ -45,6 +45,8 @@ public class BankAccountValidationEmitter {
         CompletableFuture<Boolean> future = pendingValidations.remove(correlationId);
         if (future != null) {
             future.complete(isValid);
+        } else {
+            System.err.println("Received unknown or already removed correlationId: " + correlationId);
         }
     }
 }

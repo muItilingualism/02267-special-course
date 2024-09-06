@@ -9,10 +9,10 @@ import jakarta.inject.Inject;
 public class BankAccountValidationProcessor {
 
     @Inject
-    BankAccountValidationEmitter emitter;
+    BankService bankService;
 
     @Inject
-    BankService bankService;
+    BankAccountValidationEmitter emitter;
 
     public void process(String correlationId, String bankAccountId) {
         boolean isValid = bankService.validateAccount(bankAccountId);

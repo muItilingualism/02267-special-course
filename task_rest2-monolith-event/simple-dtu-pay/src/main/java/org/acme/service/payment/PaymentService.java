@@ -16,13 +16,10 @@ import org.acme.model.exception.UnknownMerchantException;
 import org.acme.service.account.AccountService;
 import org.acme.service.bank.BankService;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.reactive.messaging.Channel;
-import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
 
 import io.smallrye.reactive.messaging.annotations.Blocking;
-import io.smallrye.reactive.messaging.annotations.Broadcast;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -38,11 +35,6 @@ public class PaymentService {
 
     @Inject
     AccountService accountService;
-
-    @Inject
-    @Channel("all-payments-assembled")
-    @Broadcast
-    Emitter<AllPaymentsAssembled> allPaymentsAssembledEmitter;
 
     @Incoming("payment-requested")
     @Outgoing("payment-processed")
@@ -75,8 +67,9 @@ public class PaymentService {
     }
 
     @Incoming("all-payments-requested")
-    public void getAllPayments(AllPaymentsRequested event) {
-        allPaymentsAssembledEmitter.send(
-                new AllPaymentsAssembled(event.getCorrelationId(), new ArrayList<>(paymentsRequests)));
+    @Outgoing("all-payments-assembled")
+    @Blocking
+    public AllPaymentsAssembled getAllPayments(AllPaymentsRequested event) {
+        return new AllPaymentsAssembled(event.getCorrelationId(), new ArrayList<>(paymentsRequests));
     }
 }

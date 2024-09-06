@@ -1,7 +1,6 @@
 package org.acme.service.account.event;
 
-import org.acme.model.event.BankAccountValidationCompleted;
-import org.eclipse.microprofile.reactive.messaging.Incoming;
+import java.util.concurrent.CompletableFuture;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -10,10 +9,14 @@ import jakarta.inject.Inject;
 public class BankAccountValidationProcessor {
 
     @Inject
-    BankAccountValidationHandler handler;
+    BankAccountValidationEmitter emitter;
 
-    @Incoming("bank-account-validated")
-    public void process(BankAccountValidationCompleted event) {
-        handler.handle(event.getCorrelationId(), event.isValid());
+    public void process(String correlationId, boolean isValid) {
+        CompletableFuture<Boolean> future = emitter.removePendingValidation(correlationId);
+        if (future != null) {
+            future.complete(isValid);
+        } else {
+            System.err.println("Received unknown or already removed correlationId: " + correlationId);
+        }
     }
 }

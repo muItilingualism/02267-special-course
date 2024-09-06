@@ -1,7 +1,6 @@
 package org.acme.service.bank.event;
 
 import org.acme.model.event.BankAccountValidationRequestedEvent;
-import org.acme.service.bank.BankService;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 
 import io.smallrye.reactive.messaging.annotations.Blocking;
@@ -10,9 +9,6 @@ import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class BankAccountValidationHandler {
-
-    @Inject
-    BankService bankService;
 
     @Inject
     BankAccountValidationProcessor processor;

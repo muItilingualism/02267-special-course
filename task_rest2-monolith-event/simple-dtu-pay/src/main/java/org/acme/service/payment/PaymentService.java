@@ -19,6 +19,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
+import org.eclipse.microprofile.reactive.messaging.Outgoing;
 
 import io.smallrye.reactive.messaging.annotations.Blocking;
 import io.smallrye.reactive.messaging.annotations.Broadcast;
@@ -39,40 +40,37 @@ public class PaymentService {
     AccountService accountService;
 
     @Inject
-    @Channel("payment-processed")
-    @Broadcast
-    Emitter<PaymentProcessed> paymentProcessedEmitter;
-
-    @Inject
     @Channel("all-payments-assembled")
     @Broadcast
     Emitter<AllPaymentsAssembled> allPaymentsAssembledEmitter;
 
     @Incoming("payment-requested")
+    @Outgoing("payment-processed")
     @Blocking
-    public void processPayment(PaymentRequested event) {
+    public PaymentProcessed processPayment(PaymentRequested event) {
         try {
             PaymentRequest request = event.getPaymentRequest();
             paymentsRequests.add(request);
 
             String customerId = request.getCustomerId();
             String merchantId = request.getMerchantId();
-     
+
+            //TODO make throw logic based on bank response.
             String customerBankId = accountService.getAccountBankId(customerId)
                     .orElseThrow(() -> new UnknownCustomerException(customerId));
             String mechantBankId = accountService.getAccountBankId(merchantId)
                     .orElseThrow(() -> new UnknownMerchantException(merchantId));
-        
+
             Payment payment = new Payment(request.getAmount(),
                     customerBankId,
                     mechantBankId,
                     String.format("TRANSACTION OF %d BY %s TO %s",
-                    request.getAmount(), customerId, merchantId));
+                            request.getAmount(), customerId, merchantId));
             bankService.transferMoney(payment);
 
-            paymentProcessedEmitter.send(new PaymentCompleted(event.getCorrelationId()));
+            return new PaymentCompleted(event.getCorrelationId());
         } catch (Exception e) {
-            paymentProcessedEmitter.send(new PaymentFailed(event.getCorrelationId(), e));
+            return new PaymentFailed(event.getCorrelationId(), e);
         }
     }
 

@@ -5,8 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class BankAccountValidationEvent {
+public class BankAccountValidationCompleted {
     private String correlationId;
-    private BankAccountValidationEventType eventType;
-    private String bankAccountId;
+    private boolean isValid;
 }

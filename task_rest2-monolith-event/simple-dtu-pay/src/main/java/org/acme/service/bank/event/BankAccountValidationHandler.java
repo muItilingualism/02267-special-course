@@ -1,7 +1,7 @@
 package org.acme.service.bank.event;
 
-import org.acme.model.event.BankAccountValidationEvent;
-import org.acme.model.event.BankAccountValidationEventType;
+import org.acme.model.event.BankAccountValidationCompleted;
+import org.acme.model.event.BankAccountValidationRequestedEvent;
 import org.acme.service.bank.BankService;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
@@ -21,25 +21,18 @@ public class BankAccountValidationHandler {
     @Inject
     @Channel("bank-account-validated")
     @Broadcast
-    Emitter<BankAccountValidationEvent> validationResultEmitter;
+    Emitter<BankAccountValidationCompleted> validationResultEmitter;
 
     @Incoming("bank-account-validation-requested")
     @Blocking
-    public void processValidationRequest(BankAccountValidationEvent event) {
-        String bankAccountId = event.getBankAccountId();
-        String correlationId = event.getCorrelationId();
-        this.handleBankAccountValidationRequest(correlationId, bankAccountId);
+    public void processValidationRequest(BankAccountValidationRequestedEvent event) {
+        this.handleBankAccountValidationRequest(event.getCorrelationId(), event.getBankAccountId());
     }
 
     public void handleBankAccountValidationRequest(String correlationId, String bankAccountId) {
         boolean isValid = bankService.validateAccount(bankAccountId);
 
-        BankAccountValidationEventType resultEventType = isValid
-                ? BankAccountValidationEventType.BANK_ACCOUNT_VALIDATION_SUCCEEDED
-                : BankAccountValidationEventType.BANK_ACCOUNT_VALIDATION_FAILED;
-
-        BankAccountValidationEvent resultEvent = new BankAccountValidationEvent(
-                correlationId, resultEventType, bankAccountId);
+        BankAccountValidationCompleted resultEvent = new BankAccountValidationCompleted(correlationId, isValid);
         validationResultEmitter.send(resultEvent);
     }
 }

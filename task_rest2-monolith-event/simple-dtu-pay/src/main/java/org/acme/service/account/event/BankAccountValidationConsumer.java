@@ -1,6 +1,6 @@
 package org.acme.service.account.event;
 
-import org.acme.model.event.BankAccountValidationEvent;
+import org.acme.model.event.BankAccountValidationCompleted;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -13,19 +13,7 @@ public class BankAccountValidationConsumer {
     BankAccountValidationEmitter validationEmitter;
 
     @Incoming("bank-account-validated")
-    public void consumeValidationResult(BankAccountValidationEvent event) {
-        String correlationId = event.getCorrelationId();
-
-        switch (event.getEventType()) {
-            case BANK_ACCOUNT_VALIDATION_SUCCEEDED:
-                validationEmitter.receiveValidationResult(correlationId, true);
-                break;
-            case BANK_ACCOUNT_VALIDATION_FAILED:
-                validationEmitter.receiveValidationResult(correlationId, false);
-                break;
-            case BANK_ACCOUNT_VALIDATION_REQUESTED:
-                // ignore
-                break;
-        }
+    public void consumeValidationResult(BankAccountValidationCompleted event) {
+        validationEmitter.receiveValidationResult(event.getCorrelationId(), event.isValid());
     }
 }

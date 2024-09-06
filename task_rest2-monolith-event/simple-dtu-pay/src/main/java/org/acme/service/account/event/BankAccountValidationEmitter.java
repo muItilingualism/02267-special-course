@@ -6,8 +6,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeoutException;
 
-import org.acme.model.event.BankAccountValidationEvent;
-import org.acme.model.event.BankAccountValidationEventType;
+import org.acme.model.event.BankAccountValidationRequestedEvent;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 
@@ -22,7 +21,7 @@ public class BankAccountValidationEmitter {
     @Inject
     @Channel("bank-account-validation-requested")
     @Broadcast
-    Emitter<BankAccountValidationEvent> bankAccountValidationEmitter;
+    Emitter<BankAccountValidationRequestedEvent> bankAccountValidationEmitter;
 
     private final ConcurrentHashMap<String, CompletableFuture<Boolean>> pendingValidations = new ConcurrentHashMap<>();
 
@@ -32,9 +31,7 @@ public class BankAccountValidationEmitter {
         pendingValidations.put(correlationId, future);
 
         bankAccountValidationEmitter.send(
-                new BankAccountValidationEvent(
-                        correlationId, BankAccountValidationEventType.BANK_ACCOUNT_VALIDATION_REQUESTED,
-                        bankAccountId));
+                new BankAccountValidationRequestedEvent(correlationId, bankAccountId));
 
         return Uni.createFrom().completionStage(future)
                 .ifNoItem().after(Duration.ofSeconds(5))

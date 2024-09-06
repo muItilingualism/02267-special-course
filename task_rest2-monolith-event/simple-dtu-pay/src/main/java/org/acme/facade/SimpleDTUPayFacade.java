@@ -29,7 +29,7 @@ public class SimpleDTUPayFacade {
 
     public Uni<Void> processPayment(PaymentRequest paymentRequest)
             throws UnknownCustomerException, UnknownMerchantException, MoneyTransferException {
-        return paymentHandler.emit(paymentRequest);
+        return paymentHandler.emitprocessPaymentRequest(paymentRequest);
     }
 
     public List<PaymentRequest> getAllPayments() {

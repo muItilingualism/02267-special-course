@@ -2,8 +2,10 @@ package org.acme.service.bank.event;
 
 import org.acme.service.bank.BankService;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+@ApplicationScoped
 public class BankAccountValidationProcessor {
 
     @Inject

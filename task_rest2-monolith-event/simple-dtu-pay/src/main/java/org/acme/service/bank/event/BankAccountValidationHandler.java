@@ -19,7 +19,7 @@ public class BankAccountValidationHandler {
     BankService bankService;
 
     @Inject
-    @Channel("bank-account-validation-response")
+    @Channel("bank-account-validated")
     @Broadcast
     Emitter<BankAccountValidationEvent> validationResultEmitter;
 

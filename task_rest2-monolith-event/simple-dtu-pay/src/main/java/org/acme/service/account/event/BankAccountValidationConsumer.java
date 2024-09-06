@@ -12,7 +12,7 @@ public class BankAccountValidationConsumer {
     @Inject
     BankAccountValidationEmitter validationEmitter;
 
-    @Incoming("bank-account-validation-response")
+    @Incoming("bank-account-validated")
     public void consumeValidationResult(BankAccountValidationEvent event) {
         String correlationId = event.getCorrelationId();
 

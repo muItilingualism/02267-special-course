@@ -25,7 +25,7 @@ public class SimpleDTUPayFacade {
     AccountService accountService;
 
     @Inject
-    PaymentHandler paymentHandler;
+    PaymentEventHandler paymentHandler;
 
     public Uni<Void> processPayment(PaymentRequest paymentRequest)
             throws UnknownCustomerException, UnknownMerchantException, MoneyTransferException {

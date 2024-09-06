@@ -22,7 +22,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public class PaymentHandler {
+public class PaymentEventHandler {
 
     @Inject
     @Channel("payment-requested")
@@ -38,9 +38,10 @@ public class PaymentHandler {
 
         PaymentRequested event = new PaymentRequested(correlationId, request);
         emitter.send(event);
-        
+
         return Uni.createFrom().completionStage(future)
-                .onFailure().invoke(throwable -> {})
+                .onFailure().invoke(throwable -> {
+                })
                 .ifNoItem().after(Duration.ofSeconds(5)).failWith(
                         new TimeoutException("Timeout: Payment request took too long"));
     }
@@ -61,7 +62,8 @@ public class PaymentHandler {
         } else if (event instanceof PaymentFailed) {
             future.completeExceptionally(((PaymentFailed) event).getCause());
         } else {
-            Log.warnf("Received unhandled PaymentProcess event %s with correlationId: %s",event.getClass(), event.getCorrelationId());
+            Log.warnf("Received unhandled PaymentProcess event %s with correlationId: %s", event.getClass(),
+                    event.getCorrelationId());
             future.completeExceptionally(new IllegalStateException("Received unhandled PaymentProcess event"));
         }
     }

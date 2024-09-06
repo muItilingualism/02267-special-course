@@ -1,5 +1,7 @@
 package org.acme.facade.resource;
 
+import java.util.concurrent.TimeoutException;
+
 import org.acme.facade.SimpleDTUPayFacade;
 import org.acme.model.PaymentRequest;
 import org.acme.model.exception.MoneyTransferException;
@@ -8,6 +10,7 @@ import org.acme.model.exception.UnknownMerchantException;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
+import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -25,10 +28,10 @@ public class PaymentResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response payment(PaymentRequest paymentRequest)
+    public Uni<Response> payment(PaymentRequest paymentRequest)
             throws UnknownCustomerException, UnknownMerchantException, MoneyTransferException {
-        dtuPayFacade.processPayment(paymentRequest);
-        return Response.ok().build();
+        return dtuPayFacade.processPayment(paymentRequest)
+                .onItem().transform(ignore -> Response.ok().build());
     }
 
     @GET
@@ -51,5 +54,10 @@ public class PaymentResource {
     @ServerExceptionMapper
     public RestResponse<String> mapException(UnknownMerchantException x) {
         return RestResponse.status(Response.Status.BAD_REQUEST, "merchant id is unknown");
+    }
+
+    @ServerExceptionMapper
+    public RestResponse<String> mapException(TimeoutException x) {
+        return RestResponse.status(Response.Status.INTERNAL_SERVER_ERROR, "Timeout, the request took too long");
     }
 }

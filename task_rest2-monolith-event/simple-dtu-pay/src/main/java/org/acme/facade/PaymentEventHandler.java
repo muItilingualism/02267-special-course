@@ -51,7 +51,7 @@ public class PaymentEventHandler {
     }
 
     @Incoming("payment-processed")
-    public void handle(PaymentProcessed event) {
+    public void handlePaymentProcessed(PaymentProcessed event) {
         CompletableFuture<Void> future = removeProcessPaymentRequest(event.getCorrelationId());
         if (future == null) {
             Log.warn("Received unknown or already removed correlationId: " + event.getCorrelationId());

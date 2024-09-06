@@ -8,7 +8,6 @@ import org.acme.model.exception.MoneyTransferException;
 import org.acme.model.exception.UnknownCustomerException;
 import org.acme.model.exception.UnknownMerchantException;
 import org.acme.service.account.AccountService;
-import org.acme.service.payment.PaymentService;
 
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -17,9 +16,6 @@ import jakarta.ws.rs.core.Response;
 
 @ApplicationScoped
 public class SimpleDTUPayFacade {
-
-    @Inject
-    PaymentService paymentService;
 
     @Inject
     AccountService accountService;
@@ -32,8 +28,8 @@ public class SimpleDTUPayFacade {
         return paymentHandler.emitprocessPaymentRequest(paymentRequest);
     }
 
-    public List<PaymentRequest> getAllPayments() {
-        return paymentService.getAllPayments();
+    public Uni<List<PaymentRequest>> getAllPayments() {
+        return paymentHandler.emitGetAllPaymentsRequest();
     }
 
     public Uni<Response> processCustomerAccountRegistration(AccountRegistrationRequest account) {

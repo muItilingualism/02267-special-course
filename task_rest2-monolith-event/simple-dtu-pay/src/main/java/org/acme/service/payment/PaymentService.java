@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.acme.model.PaymentRequest;
 import org.acme.model.bank.Payment;
+import org.acme.model.event.AllPaymentsAssembled;
+import org.acme.model.event.AllPaymentsRequested;
 import org.acme.model.event.PaymentCompleted;
 import org.acme.model.event.PaymentFailed;
 import org.acme.model.event.PaymentProcessed;
@@ -41,6 +43,11 @@ public class PaymentService {
     @Broadcast
     Emitter<PaymentProcessed> paymentProcessedEmitter;
 
+    @Inject
+    @Channel("all-payments-assembled")
+    @Broadcast
+    Emitter<AllPaymentsAssembled> allPaymentsAssembledEmitter;
+
     @Incoming("payment-requested")
     @Blocking
     public void processPayment(PaymentRequested event) {
@@ -69,7 +76,9 @@ public class PaymentService {
         }
     }
 
-    public List<PaymentRequest> getAllPayments() {
-        return new ArrayList<>(paymentsRequests);
+    @Incoming("all-payments-requested")
+    public void getAllPayments(AllPaymentsRequested event) {
+        allPaymentsAssembledEmitter.send(
+                new AllPaymentsAssembled(event.getCorrelationId(), new ArrayList<>(paymentsRequests)));
     }
 }

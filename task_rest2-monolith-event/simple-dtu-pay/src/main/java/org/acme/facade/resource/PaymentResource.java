@@ -36,8 +36,9 @@ public class PaymentResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response list() {
-        return Response.ok(dtuPayFacade.getAllPayments()).build();
+    public Uni<Response> list() {
+        return dtuPayFacade.getAllPayments()
+                .onItem().transform(list -> Response.ok(list).build());
     }
 
     @ServerExceptionMapper

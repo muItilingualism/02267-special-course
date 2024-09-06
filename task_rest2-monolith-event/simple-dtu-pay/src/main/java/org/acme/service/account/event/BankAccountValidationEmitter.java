@@ -25,7 +25,7 @@ public class BankAccountValidationEmitter {
 
     private final ConcurrentHashMap<String, CompletableFuture<Boolean>> pendingValidations = new ConcurrentHashMap<>();
 
-    public Uni<Boolean> requestValidation(String bankAccountId) {
+    public Uni<Boolean> emit(String bankAccountId) {
         String correlationId = UUID.randomUUID().toString();
         CompletableFuture<Boolean> future = new CompletableFuture<>();
         pendingValidations.put(correlationId, future);

@@ -24,7 +24,7 @@ public class AccountService {
     BankAccountValidationEmitter validationEmitter;
 
     public Uni<String> processCustomerAccountRegistration(AccountRegistrationRequest account) {
-        return validationEmitter.requestValidation(account.getBankAccountId())
+        return validationEmitter.emit(account.getBankAccountId())
                 .onItem().transformToUni(isValid -> {
                     if (!isValid) {
                         return Uni.createFrom().failure(new UnknownBankAccountIdException(account.getBankAccountId()));
@@ -37,7 +37,7 @@ public class AccountService {
     }
 
     public Uni<String> processMerchantAccountRegistration(AccountRegistrationRequest account) {
-        return validationEmitter.requestValidation(account.getBankAccountId())
+        return validationEmitter.emit(account.getBankAccountId())
                 .onItem().transformToUni(isValid -> {
                     if (!isValid) {
                         return Uni.createFrom().failure(new UnknownBankAccountIdException(account.getBankAccountId()));

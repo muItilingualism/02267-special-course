@@ -12,7 +12,7 @@ public class BankAccountValidationProcessor {
     BankAccountValidationEmitter emitter;
 
     public void process(String correlationId, boolean isValid) {
-        CompletableFuture<Boolean> future = emitter.removePendingValidation(correlationId);
+        CompletableFuture<Boolean> future = emitter.removeRequest(correlationId);
         if (future != null) {
             future.complete(isValid);
         } else {

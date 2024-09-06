@@ -23,12 +23,12 @@ public class BankAccountValidationEmitter {
     @Broadcast
     Emitter<BankAccountValidationRequestedEvent> bankAccountValidationEmitter;
 
-    private final ConcurrentHashMap<String, CompletableFuture<Boolean>> pendingValidations = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, CompletableFuture<Boolean>> pendingRequests = new ConcurrentHashMap<>();
 
     public Uni<Boolean> emit(String bankAccountId) {
         String correlationId = UUID.randomUUID().toString();
         CompletableFuture<Boolean> future = new CompletableFuture<>();
-        pendingValidations.put(correlationId, future);
+        pendingRequests.put(correlationId, future);
 
         bankAccountValidationEmitter.send(
                 new BankAccountValidationRequestedEvent(correlationId, bankAccountId));
@@ -38,7 +38,7 @@ public class BankAccountValidationEmitter {
                 .failWith(new TimeoutException("Timeout: Bank account validation took too long"));
     }
 
-    public CompletableFuture<Boolean> removePendingValidation(String correlationId) {
-        return pendingValidations.remove(correlationId);
+    public CompletableFuture<Boolean> removeRequest(String correlationId) {
+        return pendingRequests.remove(correlationId);
     }
 }

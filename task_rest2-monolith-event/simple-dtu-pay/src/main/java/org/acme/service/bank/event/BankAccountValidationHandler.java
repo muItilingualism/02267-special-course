@@ -25,9 +25,13 @@ public class BankAccountValidationHandler {
 
     @Incoming("bank-account-validation-requested")
     @Blocking
-    public void handleValidationRequest(BankAccountValidationEvent event) {
+    public void processValidationRequest(BankAccountValidationEvent event) {
         String bankAccountId = event.getBankAccountId();
         String correlationId = event.getCorrelationId();
+        this.handleBankAccountValidationRequest(correlationId, bankAccountId);
+    }
+
+    public void handleBankAccountValidationRequest(String correlationId, String bankAccountId) {
         boolean isValid = bankService.validateAccount(bankAccountId);
 
         BankAccountValidationEventType resultEventType = isValid

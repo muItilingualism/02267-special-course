@@ -7,13 +7,13 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public class BankAccountValidationConsumer {
+public class BankAccountValidationProcessor {
 
     @Inject
     BankAccountValidationEmitter validationEmitter;
 
     @Incoming("bank-account-validated")
-    public void consumeValidationResult(BankAccountValidationCompleted event) {
+    public void process(BankAccountValidationCompleted event) {
         validationEmitter.receiveValidationResult(event.getCorrelationId(), event.isValid());
     }
 }

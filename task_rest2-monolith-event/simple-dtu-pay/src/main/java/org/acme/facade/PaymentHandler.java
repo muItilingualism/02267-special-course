@@ -29,12 +29,12 @@ public class PaymentHandler {
     @Broadcast
     Emitter<PaymentRequested> emitter;
 
-    private final ConcurrentHashMap<String, CompletableFuture<Void>> pendingRequests = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, CompletableFuture<Void>> pendingProcessPaymentRequests = new ConcurrentHashMap<>();
 
     public Uni<Void> emitprocessPaymentRequest(PaymentRequest request) {
         String correlationId = UUID.randomUUID().toString();
         CompletableFuture<Void> future = new CompletableFuture<>();
-        pendingRequests.put(correlationId, future);
+        pendingProcessPaymentRequests.put(correlationId, future);
 
         PaymentRequested event = new PaymentRequested(correlationId, request);
         emitter.send(event);
@@ -45,13 +45,13 @@ public class PaymentHandler {
                         new TimeoutException("Timeout: Payment request took too long"));
     }
 
-    public CompletableFuture<Void> removeRequest(String correlationId) {
-        return pendingRequests.remove(correlationId);
+    public CompletableFuture<Void> removeProcessPaymentRequest(String correlationId) {
+        return pendingProcessPaymentRequests.remove(correlationId);
     }
 
     @Incoming("payment-processed")
     public void handle(PaymentProcessed event) {
-        CompletableFuture<Void> future = removeRequest(event.getCorrelationId());
+        CompletableFuture<Void> future = removeProcessPaymentRequest(event.getCorrelationId());
         if (future == null) {
             Log.warn("Received unknown or already removed correlationId: " + event.getCorrelationId());
         }

@@ -27,7 +27,7 @@ public class PaymentEventHandler {
     @Inject
     @Channel("payment-requested")
     @Broadcast
-    Emitter<PaymentRequested> emitter;
+    Emitter<PaymentRequested> paymentRequestedEmitter;
 
     private final ConcurrentHashMap<String, CompletableFuture<Void>> pendingProcessPaymentRequests = new ConcurrentHashMap<>();
 
@@ -37,7 +37,7 @@ public class PaymentEventHandler {
         pendingProcessPaymentRequests.put(correlationId, future);
 
         PaymentRequested event = new PaymentRequested(correlationId, request);
-        emitter.send(event);
+        paymentRequestedEmitter.send(event);
 
         return Uni.createFrom().completionStage(future)
                 .onFailure().invoke(throwable -> {

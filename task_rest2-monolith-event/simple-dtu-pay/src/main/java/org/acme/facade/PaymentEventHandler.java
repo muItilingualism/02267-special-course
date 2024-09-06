@@ -41,7 +41,7 @@ public class PaymentEventHandler {
 
     private final ConcurrentHashMap<String, CompletableFuture<List<PaymentRequest>>> pendingAllPaymentsRequests = new ConcurrentHashMap<>();
 
-    public Uni<Void> emitprocessPaymentRequest(PaymentRequest request) {
+    public Uni<Void> emitProcessPaymentRequest(PaymentRequest request) {
         String correlationId = UUID.randomUUID().toString();
         CompletableFuture<Void> future = new CompletableFuture<>();
         pendingProcessPaymentRequests.put(correlationId, future);

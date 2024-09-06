@@ -4,9 +4,6 @@ import java.util.List;
 
 import org.acme.model.AccountRegistrationRequest;
 import org.acme.model.PaymentRequest;
-import org.acme.model.exception.MoneyTransferException;
-import org.acme.model.exception.UnknownCustomerException;
-import org.acme.model.exception.UnknownMerchantException;
 import org.acme.service.account.AccountService;
 
 import io.smallrye.mutiny.Uni;
@@ -23,9 +20,8 @@ public class SimpleDTUPayFacade {
     @Inject
     PaymentEventHandler paymentHandler;
 
-    public Uni<Void> processPayment(PaymentRequest paymentRequest)
-            throws UnknownCustomerException, UnknownMerchantException, MoneyTransferException {
-        return paymentHandler.emitprocessPaymentRequest(paymentRequest);
+    public Uni<Void> processPayment(PaymentRequest paymentRequest) {
+        return paymentHandler.emitProcessPaymentRequest(paymentRequest);
     }
 
     public Uni<List<PaymentRequest>> getAllPayments() {

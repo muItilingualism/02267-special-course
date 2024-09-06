@@ -38,12 +38,7 @@ public class BankAccountValidationEmitter {
                 .failWith(new TimeoutException("Timeout: Bank account validation took too long"));
     }
 
-    public void receiveValidationResult(String correlationId, boolean isValid) {
-        CompletableFuture<Boolean> future = pendingValidations.remove(correlationId);
-        if (future != null) {
-            future.complete(isValid);
-        } else {
-            System.err.println("Received unknown or already removed correlationId: " + correlationId);
-        }
+    public CompletableFuture<Boolean> removePendingValidation(String correlationId) {
+        return pendingValidations.remove(correlationId);
     }
 }

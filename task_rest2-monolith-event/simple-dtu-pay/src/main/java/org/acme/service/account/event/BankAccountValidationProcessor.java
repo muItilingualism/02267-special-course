@@ -10,10 +10,10 @@ import jakarta.inject.Inject;
 public class BankAccountValidationProcessor {
 
     @Inject
-    BankAccountValidationEmitter validationEmitter;
+    BankAccountValidationHandler handler;
 
     @Incoming("bank-account-validated")
     public void process(BankAccountValidationCompleted event) {
-        validationEmitter.receiveValidationResult(event.getCorrelationId(), event.isValid());
+        handler.handle(event.getCorrelationId(), event.isValid());
     }
 }

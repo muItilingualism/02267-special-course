@@ -20,7 +20,7 @@ import jakarta.inject.Inject;
 public class BankAccountValidationEmitter {
 
     @Inject
-    @Channel("bank-account-validation-requests")
+    @Channel("bank-account-validation-requested")
     @Broadcast
     Emitter<BankAccountValidationEvent> bankAccountValidationEmitter;
 

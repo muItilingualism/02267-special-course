@@ -23,7 +23,7 @@ public class BankAccountValidationHandler {
     @Broadcast
     Emitter<BankAccountValidationEvent> validationResultEmitter;
 
-    @Incoming("bank-account-validation-requests")
+    @Incoming("bank-account-validation-requested")
     @Blocking
     public void handleValidationRequest(BankAccountValidationEvent event) {
         String bankAccountId = event.getBankAccountId();

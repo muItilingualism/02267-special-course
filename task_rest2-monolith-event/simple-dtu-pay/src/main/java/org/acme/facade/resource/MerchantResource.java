@@ -1,4 +1,4 @@
-package org.acme.service.account;
+package org.acme.facade.resource;
 
 import org.acme.facade.SimpleDTUPayFacade;
 import org.acme.model.AccountRegistrationRequest;

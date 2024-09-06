@@ -1,4 +1,4 @@
-package org.acme.service.account;
+package org.acme.facade.resource;
 
 import java.util.concurrent.TimeoutException;
 

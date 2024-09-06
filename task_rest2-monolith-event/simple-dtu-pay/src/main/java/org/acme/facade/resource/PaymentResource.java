@@ -1,4 +1,4 @@
-package org.acme.service.payment;
+package org.acme.facade.resource;
 
 import org.acme.facade.SimpleDTUPayFacade;
 import org.acme.model.PaymentRequest;

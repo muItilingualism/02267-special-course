@@ -76,8 +76,8 @@ public class BankService {
         }
     }
 
-    public boolean validateAccount(String accountId) {
-        Optional<Account> account = getAccount(accountId);
+    public boolean isAccountValid(String bankAccountId) {
+        Optional<Account> account = getAccount(bankAccountId);
         return account.isPresent();
     }
 }

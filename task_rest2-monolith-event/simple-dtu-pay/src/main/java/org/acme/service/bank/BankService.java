@@ -29,17 +29,16 @@ public class BankService {
         Client client = ClientBuilder.newBuilder().build();
         WebTarget target = client.target(bankUrl + "/rest/accounts/" + accountId);
 
-        Response response = target.request(MediaType.APPLICATION_JSON).get();
-        if (response.getStatus() != 200) {
-            return Optional.empty();
+        try (Response response = target.request(MediaType.APPLICATION_JSON).get()) {
+            if (response.getStatus() != 200) {
+                return Optional.empty();
+            }
+
+            Account account = response.readEntity(Account.class);
+            return Optional.of(account);
+        } finally {
+            client.close();
         }
-
-        Account account = response.readEntity(Account.class);
-
-        response.close();
-        client.close();
-
-        return Optional.of(account);
     }
 
     @SneakyThrows

@@ -47,12 +47,11 @@ public class PaymentService {
             String customerId = request.getCustomerId();
             String merchantId = request.getMerchantId();
 
-            //TODO make throw logic based on bank response.
             String customerBankId = accountService.getAccountBankId(customerId)
                     .orElseThrow(() -> new UnknownCustomerException(customerId));
             String mechantBankId = accountService.getAccountBankId(merchantId)
                     .orElseThrow(() -> new UnknownMerchantException(merchantId));
-
+            
             Payment payment = new Payment(request.getAmount(),
                     customerBankId,
                     mechantBankId,

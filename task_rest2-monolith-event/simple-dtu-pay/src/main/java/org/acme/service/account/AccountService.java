@@ -32,7 +32,7 @@ public class AccountService {
 
     @Incoming("customer-account-registration-requested")
     @Broadcast
-    @Outgoing("customer-account-registration-processed")
+    @Outgoing("account-registration-processed")
     public Uni<CustomerAccountRegistrationProcessed> processCustomerAccountRegistration(CustomerAccountRegistrationRequested event) {
         AccountRegistrationRequest account = event.getRequest();
         return validationEmitter.emit(account.getBankAccountId())

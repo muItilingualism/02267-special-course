@@ -42,7 +42,7 @@ public class AccountEventHandler {
         return Uni.createFrom().completionStage(future);
     }
 
-    @Incoming("customer-account-registration-processed")
+    @Incoming("account-registration-processed")
     public void handleAccountRegistrationProcessed(CustomerAccountRegistrationProcessed event) {
         CompletableFuture<String> future = pendingAccountRegistrations.remove(event.getCorrelationId());
         if (future == null) {

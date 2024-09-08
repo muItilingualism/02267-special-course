@@ -36,7 +36,8 @@ public class AccountService {
     @Incoming("customer-account-registration-requested")
     @Broadcast
     @Outgoing("account-registration-processed")
-    public Uni<AccountRegistrationProcessed> processCustomerAccountRegistration(CustomerAccountRegistrationRequested event) {
+    public Uni<AccountRegistrationProcessed> processCustomerAccountRegistration(
+            CustomerAccountRegistrationRequested event) {
         AccountRegistrationRequest account = event.getRequest();
         return validationEmitter.emit(account.getBankAccountId())
                 .onItem().transformToUni(isValid -> {
@@ -46,8 +47,10 @@ public class AccountService {
                     String id = generateAccountId();
                     registerAccount(new Customer(id, account.getFirstName(), account.getLastName(), account.getCpr(),
                             account.getBankAccountId()));
-                    
-                    return Uni.createFrom().item((AccountRegistrationProcessed) new CustomerAccountRegistrationCompleted(event.getCorrelationId(), id));
+
+                    return Uni.createFrom()
+                            .item((AccountRegistrationProcessed) new CustomerAccountRegistrationCompleted(
+                                    event.getCorrelationId(), id));
                 })
                 .onFailure().recoverWithItem(e -> new CustomerAccountRegistrationFailed(event.getCorrelationId(), e));
     }

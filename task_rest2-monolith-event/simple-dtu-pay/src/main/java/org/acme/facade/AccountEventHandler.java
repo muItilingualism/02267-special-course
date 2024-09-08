@@ -31,8 +31,8 @@ public class AccountEventHandler {
     AccountService accountService;
 
     @Inject
-    @Channel("customer-account-registration-requested")
     @Broadcast
+    @Channel("customer-account-registration-requested")
     Emitter<CustomerAccountRegistrationRequested> customerAccountRegistrationEmitter;
 
     @Inject

@@ -27,7 +27,8 @@ public class CustomerResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Uni<Response> registerCustomerAccount(AccountRegistrationRequest account) {
-        return dtuPayFacade.processCustomerAccountRegistration(account);
+        return dtuPayFacade.processCustomerAccountRegistration(account)
+                .onItem().transform(id -> Response.ok(id).build());
     }
 
     @ServerExceptionMapper

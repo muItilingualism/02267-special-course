@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.acme.model.AccountRegistrationRequest;
 import org.acme.model.PaymentRequest;
-import org.acme.service.account.AccountService;
 
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -15,7 +14,7 @@ import jakarta.ws.rs.core.Response;
 public class SimpleDTUPayFacade {
 
     @Inject
-    AccountService accountService;
+    AccountEventHandler accountHandler;
 
     @Inject
     PaymentEventHandler paymentHandler;
@@ -28,13 +27,12 @@ public class SimpleDTUPayFacade {
         return paymentHandler.emitGetAllPaymentsRequest();
     }
 
-    public Uni<Response> processCustomerAccountRegistration(AccountRegistrationRequest account) {
-        return accountService.processCustomerAccountRegistration(account)
-                .onItem().transform(id -> Response.ok(id).build());
+    public Uni<String> processCustomerAccountRegistration(AccountRegistrationRequest account) {
+        return accountHandler.emitProcessCustomerAcountRegistration(account);
+        
     }
 
     public Uni<Response> processMerchantAccountRegistration(AccountRegistrationRequest account) {
-        return accountService.processMerchantAccountRegistration(account)
-                .onItem().transform(id -> Response.ok(id).build());
+        return accountHandler.emitProcessMerchantAccountRegistration(account);
     }
 }

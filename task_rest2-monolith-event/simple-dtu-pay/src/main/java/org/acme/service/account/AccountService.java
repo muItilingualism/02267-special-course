@@ -9,10 +9,17 @@ import org.acme.model.Account;
 import org.acme.model.AccountRegistrationRequest;
 import org.acme.model.Customer;
 import org.acme.model.Merchant;
+import org.acme.model.event.CustomerAccountRegistrationCompleted;
+import org.acme.model.event.CustomerAccountRegistrationFailed;
+import org.acme.model.event.CustomerAccountRegistrationProcessed;
+import org.acme.model.event.CustomerAccountRegistrationRequested;
 import org.acme.model.exception.UnknownBankAccountIdException;
 import org.acme.service.account.event.BankAccountValidationEmitter;
+import org.eclipse.microprofile.reactive.messaging.Incoming;
+import org.eclipse.microprofile.reactive.messaging.Outgoing;
 
 import io.smallrye.mutiny.Uni;
+import io.smallrye.reactive.messaging.annotations.Broadcast;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -23,7 +30,11 @@ public class AccountService {
     @Inject
     BankAccountValidationEmitter validationEmitter;
 
-    public Uni<String> processCustomerAccountRegistration(AccountRegistrationRequest account) {
+    @Incoming("customer-account-registration-requested")
+    @Broadcast
+    @Outgoing("customer-account-registration-processed")
+    public Uni<CustomerAccountRegistrationProcessed> processCustomerAccountRegistration(CustomerAccountRegistrationRequested event) {
+        AccountRegistrationRequest account = event.getRequest();
         return validationEmitter.emit(account.getBankAccountId())
                 .onItem().transformToUni(isValid -> {
                     if (!isValid) {
@@ -32,8 +43,10 @@ public class AccountService {
                     String id = generateAccountId();
                     registerAccount(new Customer(id, account.getFirstName(), account.getLastName(), account.getCpr(),
                             account.getBankAccountId()));
-                    return Uni.createFrom().item(id);
-                });
+                    
+                    return Uni.createFrom().item((CustomerAccountRegistrationProcessed) new CustomerAccountRegistrationCompleted(event.getCorrelationId(), id));
+                })
+                .onFailure().recoverWithItem(e -> new CustomerAccountRegistrationFailed(event.getCorrelationId(), e));
     }
 
     public Uni<String> processMerchantAccountRegistration(AccountRegistrationRequest account) {

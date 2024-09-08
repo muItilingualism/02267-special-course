@@ -3,7 +3,7 @@ package org.acme.model.event;
 import lombok.Getter;
 
 @Getter
-public class MerchantAccountRegistrationFailed extends MerchantAccountRegistrationProcessed {
+public class MerchantAccountRegistrationFailed extends AccountRegistrationProcessed {
     private Throwable cause;
 
     public MerchantAccountRegistrationFailed(String correlationId, Throwable cause) {

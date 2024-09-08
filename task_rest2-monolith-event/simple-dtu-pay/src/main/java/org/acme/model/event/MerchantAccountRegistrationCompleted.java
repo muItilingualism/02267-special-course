@@ -3,7 +3,7 @@ package org.acme.model.event;
 import lombok.Getter;
 
 @Getter
-public class MerchantAccountRegistrationCompleted extends MerchantAccountRegistrationProcessed {
+public class MerchantAccountRegistrationCompleted extends AccountRegistrationProcessed {
     private String id;
 
     public MerchantAccountRegistrationCompleted(String correlationId, String id) {

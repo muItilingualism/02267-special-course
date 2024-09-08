@@ -9,9 +9,9 @@ import org.acme.model.Account;
 import org.acme.model.AccountRegistrationRequest;
 import org.acme.model.Customer;
 import org.acme.model.Merchant;
+import org.acme.model.event.AccountRegistrationProcessed;
 import org.acme.model.event.CustomerAccountRegistrationCompleted;
 import org.acme.model.event.CustomerAccountRegistrationFailed;
-import org.acme.model.event.CustomerAccountRegistrationProcessed;
 import org.acme.model.event.CustomerAccountRegistrationRequested;
 import org.acme.model.exception.UnknownBankAccountIdException;
 import org.acme.service.account.event.BankAccountValidationEmitter;
@@ -33,7 +33,7 @@ public class AccountService {
     @Incoming("customer-account-registration-requested")
     @Broadcast
     @Outgoing("account-registration-processed")
-    public Uni<CustomerAccountRegistrationProcessed> processCustomerAccountRegistration(CustomerAccountRegistrationRequested event) {
+    public Uni<AccountRegistrationProcessed> processCustomerAccountRegistration(CustomerAccountRegistrationRequested event) {
         AccountRegistrationRequest account = event.getRequest();
         return validationEmitter.emit(account.getBankAccountId())
                 .onItem().transformToUni(isValid -> {
@@ -44,7 +44,7 @@ public class AccountService {
                     registerAccount(new Customer(id, account.getFirstName(), account.getLastName(), account.getCpr(),
                             account.getBankAccountId()));
                     
-                    return Uni.createFrom().item((CustomerAccountRegistrationProcessed) new CustomerAccountRegistrationCompleted(event.getCorrelationId(), id));
+                    return Uni.createFrom().item((AccountRegistrationProcessed) new CustomerAccountRegistrationCompleted(event.getCorrelationId(), id));
                 })
                 .onFailure().recoverWithItem(e -> new CustomerAccountRegistrationFailed(event.getCorrelationId(), e));
     }

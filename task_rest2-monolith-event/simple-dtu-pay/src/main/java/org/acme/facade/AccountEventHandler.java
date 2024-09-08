@@ -5,9 +5,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.acme.model.AccountRegistrationRequest;
+import org.acme.model.event.AccountRegistrationProcessed;
 import org.acme.model.event.CustomerAccountRegistrationCompleted;
 import org.acme.model.event.CustomerAccountRegistrationFailed;
-import org.acme.model.event.CustomerAccountRegistrationProcessed;
 import org.acme.model.event.CustomerAccountRegistrationRequested;
 import org.acme.service.account.AccountService;
 import org.eclipse.microprofile.reactive.messaging.Channel;
@@ -43,7 +43,7 @@ public class AccountEventHandler {
     }
 
     @Incoming("account-registration-processed")
-    public void handleAccountRegistrationProcessed(CustomerAccountRegistrationProcessed event) {
+    public void handleAccountRegistrationProcessed(AccountRegistrationProcessed event) {
         CompletableFuture<String> future = pendingAccountRegistrations.remove(event.getCorrelationId());
         if (future == null) {
             Log.warn("Received unknown or already removed account-registration-processed correlationId: "

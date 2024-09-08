@@ -1,4 +1,5 @@
 Feature: Payment
+
 Scenario: Successful Payment
     Given a customer with id "cid1"
     And a merchant with id "mid1"
@@ -28,7 +29,12 @@ Scenario: Merchant is not registered
     Then the payment is not successful
     And an error message is returned saying "merchant id is unknown"
 
-Scenario: Account registration
+Scenario: Account registered
     Given a customer with id "cid1"
     When the customer is registered
     Then the customer registration is successful
+
+Scenario: Account not registered
+    Given an unregistered customer with id "cid2"
+    When the customer is registered
+    Then the customer registration is unsuccessful

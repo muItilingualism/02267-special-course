@@ -127,6 +127,11 @@ public class SimpleDTUPaySteps {
         assertTrue(response.isSuccessful());
     }
 
+    @Then("the customer registration is unsuccessful")
+    public void theCustomerRegistrationIsUnsuccessful() {
+        assertFalse(response.isSuccessful());
+    }
+
     @After
     public void removeBankAccounts() {
         bank.deleteAccount(cBankId);

@@ -1,5 +1,7 @@
 package org.acme.facade.resource;
 
+import java.util.concurrent.TimeoutException;
+
 import org.acme.facade.SimpleDTUPayFacade;
 import org.acme.model.AccountRegistrationRequest;
 import org.acme.model.exception.UnknownBankAccountIdException;
@@ -25,7 +27,8 @@ public class MerchantResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Uni<Response> registerMerchantAccount(AccountRegistrationRequest account) {
-        return dtuPayFacade.processMerchantAccountRegistration(account);
+        return dtuPayFacade.processMerchantAccountRegistration(account)
+                .onItem().transform(id -> Response.ok(id).build());
     }
 
     @ServerExceptionMapper

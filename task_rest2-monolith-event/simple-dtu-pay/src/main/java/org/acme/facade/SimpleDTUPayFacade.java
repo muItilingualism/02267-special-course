@@ -32,7 +32,7 @@ public class SimpleDTUPayFacade {
         
     }
 
-    public Uni<Response> processMerchantAccountRegistration(AccountRegistrationRequest account) {
+    public Uni<String> processMerchantAccountRegistration(AccountRegistrationRequest account) {
         return accountHandler.emitProcessMerchantAccountRegistration(account);
     }
 }

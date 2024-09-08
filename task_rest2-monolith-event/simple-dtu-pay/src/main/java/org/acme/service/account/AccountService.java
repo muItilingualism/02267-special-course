@@ -13,6 +13,9 @@ import org.acme.model.event.AccountRegistrationProcessed;
 import org.acme.model.event.CustomerAccountRegistrationCompleted;
 import org.acme.model.event.CustomerAccountRegistrationFailed;
 import org.acme.model.event.CustomerAccountRegistrationRequested;
+import org.acme.model.event.MerchantAccountRegistrationCompleted;
+import org.acme.model.event.MerchantAccountRegistrationFailed;
+import org.acme.model.event.MerchantAccountRegistrationRequested;
 import org.acme.model.exception.UnknownBankAccountIdException;
 import org.acme.service.account.event.BankAccountValidationEmitter;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
@@ -49,7 +52,12 @@ public class AccountService {
                 .onFailure().recoverWithItem(e -> new CustomerAccountRegistrationFailed(event.getCorrelationId(), e));
     }
 
-    public Uni<String> processMerchantAccountRegistration(AccountRegistrationRequest account) {
+    @Incoming("merchant-account-registration-requested")
+    @Broadcast
+    @Outgoing("account-registration-processed")
+    public Uni<AccountRegistrationProcessed> processMerchantAccountRegistration(
+            MerchantAccountRegistrationRequested event) {
+        AccountRegistrationRequest account = event.getRequest();
         return validationEmitter.emit(account.getBankAccountId())
                 .onItem().transformToUni(isValid -> {
                     if (!isValid) {
@@ -58,8 +66,12 @@ public class AccountService {
                     String id = generateAccountId();
                     registerAccount(new Merchant(id, account.getFirstName(), account.getLastName(), account.getCpr(),
                             account.getBankAccountId()));
-                    return Uni.createFrom().item(id);
-                });
+
+                    return Uni.createFrom()
+                            .item((AccountRegistrationProcessed) new MerchantAccountRegistrationCompleted(
+                                    event.getCorrelationId(), id));
+                })
+                .onFailure().recoverWithItem(e -> new MerchantAccountRegistrationFailed(event.getCorrelationId(), e));
     }
 
     private String generateAccountId() {

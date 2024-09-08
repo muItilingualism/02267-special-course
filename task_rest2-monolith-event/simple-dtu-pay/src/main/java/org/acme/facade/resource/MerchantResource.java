@@ -32,4 +32,9 @@ public class MerchantResource {
     public RestResponse<String> mapException(UnknownBankAccountIdException x) {
         return RestResponse.status(Response.Status.NOT_FOUND, "Unknown bank account id: " + x.id);
     }
+
+    @ServerExceptionMapper
+    public RestResponse<String> mapException(TimeoutException x) {
+        return RestResponse.status(Response.Status.INTERNAL_SERVER_ERROR, "Timeout, the request took too long");
+    }
 }

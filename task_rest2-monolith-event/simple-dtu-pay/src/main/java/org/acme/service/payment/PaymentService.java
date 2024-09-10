@@ -66,6 +66,7 @@ public class PaymentService {
     }
 
     @Incoming("all-payments-requested")
+    @Broadcast
     @Outgoing("all-payments-assembled")
     @Blocking
     public AllPaymentsAssembled getAllPayments(AllPaymentsRequested event) {

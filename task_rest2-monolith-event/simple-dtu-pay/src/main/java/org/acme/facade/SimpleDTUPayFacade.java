@@ -8,7 +8,6 @@ import org.acme.model.PaymentRequest;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.core.Response;
 
 @ApplicationScoped
 public class SimpleDTUPayFacade {

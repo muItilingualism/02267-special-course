@@ -13,13 +13,17 @@ import org.acme.model.event.PaymentProcessed;
 import org.acme.model.event.PaymentRequested;
 import org.acme.model.exception.UnknownCustomerException;
 import org.acme.model.exception.UnknownMerchantException;
-import org.acme.service.account.AccountService;
 import org.acme.service.bank.BankService;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
 
+import io.smallrye.mutiny.Uni;
+import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.smallrye.reactive.messaging.annotations.Blocking;
+import io.smallrye.reactive.messaging.annotations.Broadcast;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -34,35 +38,62 @@ public class PaymentService {
     BankService bankService;
 
     @Inject
-    AccountService accountService;
+    BankAccountIdRequestHandler bankAccountIdRequestEmitter;
+
+    @Inject
+    @Broadcast
+    @Channel("payment-processed")
+    Emitter<PaymentProcessed> paymentProcessedEmitter;
 
     @Incoming("payment-requested")
-    @Outgoing("payment-processed")
     @Blocking
-    public PaymentProcessed processPayment(PaymentRequested event) {
-        try {
-            PaymentRequest request = event.getPaymentRequest();
-            paymentsRequests.add(request);
+    public void onPaymentRequested(PaymentRequested event) {
+        this.processPayment(event)
+                .subscribe().with(
+                        paymentProcessed -> emitPaymentProcessed(paymentProcessed),
+                        failure -> emitPaymentProcessed(new PaymentFailed(event.getCorrelationId(), failure)));
+    }
 
-            String customerId = request.getCustomerId();
-            String merchantId = request.getMerchantId();
+    public void emitPaymentProcessed(PaymentProcessed paymentProcessed) {
+        paymentProcessedEmitter.send(paymentProcessed);
+    }
 
-            String customerBankId = accountService.getAccountBankId(customerId)
-                    .orElseThrow(() -> new UnknownCustomerException(customerId));
-            String mechantBankId = accountService.getAccountBankId(merchantId)
-                    .orElseThrow(() -> new UnknownMerchantException(merchantId));
-            
-            Payment payment = new Payment(request.getAmount(),
-                    customerBankId,
-                    mechantBankId,
-                    String.format("TRANSACTION OF %d BY %s TO %s",
-                            request.getAmount(), customerId, merchantId));
-            bankService.transferMoney(payment);
+    public Uni<PaymentProcessed> processPayment(PaymentRequested event) {
+        PaymentRequest request = event.getPaymentRequest();
+        paymentsRequests.add(request);
 
-            return new PaymentCompleted(event.getCorrelationId());
-        } catch (Exception e) {
-            return new PaymentFailed(event.getCorrelationId(), e);
-        }
+        String customerId = request.getCustomerId();
+        String merchantId = request.getMerchantId();
+
+        Uni<String> customerBankIdUni = bankAccountIdRequestEmitter.emit(customerId);
+        Uni<String> merchantBankIdUni = bankAccountIdRequestEmitter.emit(merchantId);
+
+        return Uni.combine().all().unis(customerBankIdUni, merchantBankIdUni).asTuple()
+                .onItem().transformToUni(tuple -> {
+                    String customerBankId = tuple.getItem1();
+                    String merchantBankId = tuple.getItem2();
+
+                    if (customerBankId == null) {
+                        return Uni.createFrom()
+                                .failure(new UnknownCustomerException(customerId));
+                    }
+                    if (merchantBankId == null) {
+                        return Uni.createFrom()
+                                .failure(new UnknownMerchantException(merchantId));
+                    }
+
+                    Payment payment = new Payment(request.getAmount(),
+                            customerBankId,
+                            merchantBankId,
+                            String.format("TRANSACTION OF %d BY %s TO %s",
+                                    request.getAmount(), customerId, merchantId));
+
+                    return Uni.createFrom().item(payment)
+                        .runSubscriptionOn(Infrastructure.getDefaultWorkerPool())
+                        .onItem().invoke(() -> bankService.transferMoney(payment))
+                        .replaceWith((PaymentProcessed) new PaymentCompleted(event.getCorrelationId()));
+                })
+                .onFailure().recoverWithItem(e -> new PaymentFailed(event.getCorrelationId(), e));
     }
 
     @Incoming("all-payments-requested")

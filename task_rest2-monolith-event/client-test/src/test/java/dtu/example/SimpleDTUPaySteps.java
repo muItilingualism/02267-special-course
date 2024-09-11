@@ -118,17 +118,32 @@ public class SimpleDTUPaySteps {
     }
 
     @When("the customer is registered")
-    public void theAccountIsRegistered() {
+    public void theCustomerIsRegistered() {
         response = dtuPay.registerCustomer(this.cCpr, this.cBankId);
     }
 
     @Then("the customer registration is successful")
-    public void theAccountRegistrationIsSuccessful() {
+    public void theCustomerRegistrationIsSuccessful() {
         assertTrue(response.isSuccessful());
     }
 
     @Then("the customer registration is unsuccessful")
     public void theCustomerRegistrationIsUnsuccessful() {
+        assertFalse(response.isSuccessful());
+    }
+
+    @When("the merchant is registered")
+    public void theMerchantIsRegistered() {
+        response = dtuPay.registerMerchant(this.mCpr, this.mBankId);
+    }
+
+    @Then("the merchant registration is successful")
+    public void theMerchantRegistrationIsSuccessful() {
+        assertTrue(response.isSuccessful());
+    }
+
+    @Then("the merchant registration is unsuccessful")
+    public void theMerchantRegistrationIsUnsuccessful() {
         assertFalse(response.isSuccessful());
     }
 

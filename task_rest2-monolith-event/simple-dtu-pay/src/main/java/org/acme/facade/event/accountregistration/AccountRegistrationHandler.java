@@ -12,7 +12,6 @@ import org.acme.model.event.CustomerAccountRegistrationRequested;
 import org.acme.model.event.MerchantAccountRegistrationCompleted;
 import org.acme.model.event.MerchantAccountRegistrationFailed;
 import org.acme.model.event.MerchantAccountRegistrationRequested;
-import org.acme.service.account.AccountService;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
@@ -26,9 +25,6 @@ import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class AccountRegistrationHandler {
-
-    @Inject
-    AccountService accountService;
 
     @Inject
     @Broadcast

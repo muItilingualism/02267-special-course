@@ -1,4 +1,4 @@
-package org.acme.facade;
+package org.acme.facade.event.payment;
 
 import java.time.Duration;
 import java.util.List;

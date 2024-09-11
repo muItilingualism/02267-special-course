@@ -3,6 +3,7 @@ package org.acme.facade;
 import java.util.List;
 
 import org.acme.facade.event.accountregistration.AccountRegistrationHandler;
+import org.acme.facade.event.payment.PaymentEventHandler;
 import org.acme.model.AccountRegistrationRequest;
 import org.acme.model.PaymentRequest;
 

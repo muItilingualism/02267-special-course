@@ -17,7 +17,7 @@ import org.acme.model.event.MerchantAccountRegistrationCompleted;
 import org.acme.model.event.MerchantAccountRegistrationFailed;
 import org.acme.model.event.MerchantAccountRegistrationRequested;
 import org.acme.model.exception.UnknownBankAccountIdException;
-import org.acme.service.account.event.BankAccountValidationEmitter;
+import org.acme.service.account.event.BankAccountValidation.BankAccountValidationEmitter;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
 

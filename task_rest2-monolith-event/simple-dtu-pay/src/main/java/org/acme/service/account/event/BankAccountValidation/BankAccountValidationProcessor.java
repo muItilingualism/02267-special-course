@@ -1,4 +1,4 @@
-package org.acme.service.account.event;
+package org.acme.service.account.event.BankAccountValidation;
 
 import java.util.concurrent.CompletableFuture;
 

@@ -1,6 +1,6 @@
 package org.acme.service.bank.event.bankaccountvalidation;
 
-import org.acme.model.event.BankAccountValidationRequestedEvent;
+import org.acme.model.event.BankAccountValidationRequested;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 
 import io.smallrye.reactive.messaging.annotations.Blocking;
@@ -15,7 +15,7 @@ public class BankAccountValidationHandler {
 
     @Incoming("bank-account-validation-requested")
     @Blocking
-    public void handle(BankAccountValidationRequestedEvent event) {
+    public void handle(BankAccountValidationRequested event) {
         processor.process(event.getCorrelationId(), event.getBankAccountId());
     }
 }

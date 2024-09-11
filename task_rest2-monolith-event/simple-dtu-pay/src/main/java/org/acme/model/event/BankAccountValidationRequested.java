@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class BankAccountValidationRequestedEvent {
+public class BankAccountValidationRequested {
     private String correlationId;
     private String bankAccountId;
 }

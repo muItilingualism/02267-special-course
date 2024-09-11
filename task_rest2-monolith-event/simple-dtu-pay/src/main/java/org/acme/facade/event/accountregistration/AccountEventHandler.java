@@ -1,4 +1,4 @@
-package org.acme.facade;
+package org.acme.facade.event.accountregistration;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;

@@ -25,7 +25,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public class PaymentEventHandler {
+public class PaymentHandler {
 
     @Inject
     @Channel("payment-requested")

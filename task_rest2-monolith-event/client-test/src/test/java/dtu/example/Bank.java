@@ -2,10 +2,11 @@ package dtu.example;
 
 import java.util.Optional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import dtu.example.model.bank.Account;
 import dtu.example.model.bank.AccountCreationRequest;
-import io.cucumber.core.internal.com.fasterxml.jackson.core.JsonProcessingException;
-import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;

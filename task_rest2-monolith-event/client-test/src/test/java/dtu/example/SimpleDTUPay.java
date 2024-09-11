@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import dtu.example.model.simpledtupay.AccountRegistrationRequest;
 import dtu.example.model.simpledtupay.Payment;
 import dtu.example.model.simpledtupay.ResponseResult;
-import io.cucumber.core.internal.com.fasterxml.jackson.core.JsonProcessingException;
-import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.ws.rs.client.Client;

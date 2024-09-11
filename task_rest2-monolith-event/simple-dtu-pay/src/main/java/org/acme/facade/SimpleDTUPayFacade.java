@@ -2,7 +2,7 @@ package org.acme.facade;
 
 import java.util.List;
 
-import org.acme.facade.event.accountregistration.AccountRegistrationHandler;
+import org.acme.facade.event.accountregistration.AccountRegistrationEmitter;
 import org.acme.facade.event.payment.PaymentEmitter;
 import org.acme.model.AccountRegistrationRequest;
 import org.acme.model.PaymentRequest;
@@ -15,7 +15,7 @@ import jakarta.inject.Inject;
 public class SimpleDTUPayFacade {
 
     @Inject
-    AccountRegistrationHandler accountHandler;
+    AccountRegistrationEmitter accountRegistrationEmitter;
 
     @Inject
     PaymentEmitter paymentEmitter;
@@ -29,11 +29,11 @@ public class SimpleDTUPayFacade {
     }
 
     public Uni<String> processCustomerAccountRegistration(AccountRegistrationRequest account) {
-        return accountHandler.emitProcessCustomerAcountRegistration(account);
+        return accountRegistrationEmitter.emitProcessCustomerAcountRegistration(account);
         
     }
 
     public Uni<String> processMerchantAccountRegistration(AccountRegistrationRequest account) {
-        return accountHandler.emitProcessMerchantAccountRegistration(account);
+        return accountRegistrationEmitter.emitProcessMerchantAccountRegistration(account);
     }
 }

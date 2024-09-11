@@ -1,4 +1,4 @@
-package org.acme.service.bank.event;
+package org.acme.service.bank.event.bankaccountvalidation;
 
 import org.acme.service.bank.BankService;
 

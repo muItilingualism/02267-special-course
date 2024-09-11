@@ -2,7 +2,7 @@ package org.acme.facade;
 
 import java.util.List;
 
-import org.acme.facade.event.accountregistration.AccountEventHandler;
+import org.acme.facade.event.accountregistration.AccountRegistrationHandler;
 import org.acme.model.AccountRegistrationRequest;
 import org.acme.model.PaymentRequest;
 
@@ -14,7 +14,7 @@ import jakarta.inject.Inject;
 public class SimpleDTUPayFacade {
 
     @Inject
-    AccountEventHandler accountHandler;
+    AccountRegistrationHandler accountHandler;
 
     @Inject
     PaymentEventHandler paymentHandler;

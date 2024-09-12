@@ -1,0 +1,21 @@
+services:
+  simpledtupay:
+    build:
+      context: ./simple-dtu-pay
+      dockerfile: src/main/docker/Dockerfile.jvm
+    ports:
+      - "8080:8080"
+    networks:
+      - network
+  bank:
+    build:
+      context: ../bank/bank_service
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    networks:
+      - network
+
+networks:
+  network:
+    driver: bridge

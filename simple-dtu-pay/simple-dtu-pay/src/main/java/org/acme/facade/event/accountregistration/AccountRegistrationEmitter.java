@@ -35,7 +35,11 @@ public class AccountRegistrationEmitter {
         CompletableFuture<String> future = new CompletableFuture<>();
         pendingAccountRegistrations.put(correlationId, future);
         customerAccountRegistrationEmitter.send(new CustomerAccountRegistrationRequested(correlationId, account));
-        return Uni.createFrom().completionStage(future);
+        return Uni.createFrom().completionStage(future)
+                .onFailure().invoke(throwable -> {
+                })
+                .ifNoItem().after(Duration.ofSeconds(5)).failWith(
+                        new TimeoutException("Timeout: Customer registration request took too long"));
     }
 
     public Uni<String> emitProcessMerchantAccountRegistration(AccountRegistrationRequest account) {
@@ -43,7 +47,11 @@ public class AccountRegistrationEmitter {
         CompletableFuture<String> future = new CompletableFuture<>();
         pendingAccountRegistrations.put(correlationId, future);
         merchantAccountRegistrationEmitter.send(new MerchantAccountRegistrationRequested(correlationId, account));
-        return Uni.createFrom().completionStage(future);
+        return Uni.createFrom().completionStage(future)
+                .onFailure().invoke(throwable -> {
+                })
+                .ifNoItem().after(Duration.ofSeconds(5)).failWith(
+                        new TimeoutException("Timeout: Merchant registration request took too long"));
     }
 
     public CompletableFuture<String> remove(String correlationId) {

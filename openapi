@@ -1,0 +1,79 @@
+---
+openapi: 3.0.3
+info:
+  title: simple-dtu-pay API
+  version: 1.0.0-SNAPSHOT
+paths:
+  /customers:
+    post:
+      tags:
+      - Customer Resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccountRegistrationRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json: {}
+  /merchants:
+    post:
+      tags:
+      - Merchant Resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccountRegistrationRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json: {}
+  /payments:
+    get:
+      tags:
+      - Payment Resource
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json: {}
+    post:
+      tags:
+      - Payment Resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PaymentRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json: {}
+components:
+  schemas:
+    AccountRegistrationRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        cpr:
+          type: string
+        bankAccountId:
+          type: string
+    PaymentRequest:
+      type: object
+      properties:
+        amount:
+          format: int32
+          type: integer
+        customerId:
+          type: string
+        merchantId:
+          type: string

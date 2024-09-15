@@ -51,11 +51,9 @@ public class AccountService {
     @Incoming("customer-account-registration-requested")
     public Uni<Void> processCustomerAccountRegistration(
             JsonObject jsonEvent) {
-        Log.fatal("Received customer-account-registration-request");
         CustomerAccountRegistrationRequested event = jsonEvent.mapTo(CustomerAccountRegistrationRequested.class);
 
         AccountRegistrationRequest account = event.getRequest();
-        Log.fatal("emitting and awaiting: " + account.getBankAccountId());
         return validationEmitter.emit(account.getBankAccountId())
                 .onItem().transformToUni(isValid -> {
                     if (!isValid) {
@@ -94,8 +92,6 @@ public class AccountService {
     @Outgoing("account-registration-processed")
     public Uni<Void> processMerchantAccountRegistration(
             JsonObject jsonEvent) {
-        Log.fatal("Received merchant-account-registration-request");
-
         MerchantAccountRegistrationRequested event = jsonEvent.mapTo(MerchantAccountRegistrationRequested.class);
 
         AccountRegistrationRequest account = event.getRequest();

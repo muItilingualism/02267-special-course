@@ -25,7 +25,6 @@ public class AccountRegistrationProcessor {
             return;
         }
         event.completeFuture(future);
-        Log.fatal("completed future1");
     }
 
     public void processCustomerAccountRegistrationFailed(CustomerAccountRegistrationFailed event) {
@@ -36,7 +35,6 @@ public class AccountRegistrationProcessor {
             return;
         }
         event.completeFuture(future);
-        Log.fatal("completed future2");
     }
 
     public void processMerchantAccountRegistrationCompleted(MerchantAccountRegistrationCompleted event) {
@@ -47,7 +45,6 @@ public class AccountRegistrationProcessor {
             return;
         }
         event.completeFuture(future);
-        Log.fatal("completed future3");
     }
 
     public void processMerchantAccountRegistrationFailed(MerchantAccountRegistrationFailed event) {
@@ -58,6 +55,5 @@ public class AccountRegistrationProcessor {
             return;
         }
         event.completeFuture(future);
-        Log.fatal("completed future4");
     }
 }

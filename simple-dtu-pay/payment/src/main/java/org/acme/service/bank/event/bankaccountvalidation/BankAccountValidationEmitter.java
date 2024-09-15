@@ -20,6 +20,5 @@ public class BankAccountValidationEmitter {
     public void emit(String correlationId, Boolean isValid) {
         BankAccountValidationCompleted resultEvent = new BankAccountValidationCompleted(correlationId, isValid);
         validationResultEmitter.send(resultEvent);
-        Log.fatal("EMIT: Bank account validated: " + correlationId + " isvalid: " + resultEvent.isValid());
     }
 }

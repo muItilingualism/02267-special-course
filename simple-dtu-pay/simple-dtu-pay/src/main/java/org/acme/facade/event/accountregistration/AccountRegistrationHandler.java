@@ -19,34 +19,24 @@ public class AccountRegistrationHandler {
 
     @Incoming("customer-account-registration-completed")
     public void handleCustomerAccountRegistrationCompleted(JsonObject jsonEvent) {
-        Log.fatal("CUSTOMER COMPLETED");
-
         CustomerAccountRegistrationCompleted event = jsonEvent.mapTo(CustomerAccountRegistrationCompleted.class);
-
         this.processor.processCustomerAccountRegistrationCompleted(event);
     }  
     
     @Incoming("customer-account-registration-failed")
     public void handleCustomerAccountRegistrationFailed(JsonObject jsonEvent) {
-        Log.fatal("CUSTOMER FAILED");
-
         CustomerAccountRegistrationFailed event = jsonEvent.mapTo(CustomerAccountRegistrationFailed.class);
         this.processor.processCustomerAccountRegistrationFailed(event);
     }  
 
     @Incoming("merchant-account-registration-completed")
     public void handleMerchantAccountRegistrationCompleted(JsonObject jsonEvent) {
-        Log.fatal("MERCHANT COMPLETED");
-
         MerchantAccountRegistrationCompleted event = jsonEvent.mapTo(MerchantAccountRegistrationCompleted.class);
-
         this.processor.processMerchantAccountRegistrationCompleted(event);
     }  
     
     @Incoming("merchant-account-registration-failed")
     public void handleMerchantAccountRegistrationFailed(JsonObject jsonEvent) {
-        Log.fatal("MERCHANT FAILED");
-
         MerchantAccountRegistrationFailed event = jsonEvent.mapTo(MerchantAccountRegistrationFailed.class);
         this.processor.processMerchantAccountRegistrationFailed(event);
     }  

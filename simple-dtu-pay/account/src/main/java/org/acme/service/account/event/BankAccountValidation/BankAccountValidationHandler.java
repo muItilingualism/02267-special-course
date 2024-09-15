@@ -3,6 +3,8 @@ package org.acme.service.account.event.BankAccountValidation;
 import org.acme.model.event.BankAccountValidationCompleted;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 
+import io.quarkus.logging.Log;
+import io.vertx.core.json.JsonObject;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -13,7 +15,10 @@ public class BankAccountValidationHandler {
     BankAccountValidationProcessor processor;
 
     @Incoming("bank-account-validated")
-    public void handle(BankAccountValidationCompleted event) {
-        processor.process(event.getCorrelationId(), event.isValid());
+    public void handle(JsonObject jsonEvent) {
+        BankAccountValidationCompleted event = jsonEvent.mapTo(BankAccountValidationCompleted.class);
+        Log.fatal("received bankaccountvalidationcompleted event!: " + event.getCorrelationId() + " " + event.isValid());
+        
+        processor.process(event.getCorrelationId(), true);
     }
 }

@@ -15,8 +15,10 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.reactive.messaging.annotations.Broadcast;
+import io.vertx.core.json.JsonObject;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import io.quarkus.logging.Log;
 
 @ApplicationScoped
 public class BankAccountIdRequestHandler {
@@ -44,7 +46,8 @@ public class BankAccountIdRequestHandler {
     }
 
     @Incoming("bank-account-id-assembled")
-    public void handle(BankAccountIdAssembled event) {
+    public void handle(JsonObject jsonEvent) {
+        BankAccountIdAssembled event = jsonEvent.mapTo(BankAccountIdAssembled.class);
         this.process(event.getCorrelationId(), event.getBankAccountId());
     }
 

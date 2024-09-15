@@ -1,10 +1,12 @@
 package org.acme.model.event;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-public class PaymentCompleted extends PaymentProcessed {
-    public PaymentCompleted(String correlationId) {
-        super(correlationId);
-    }
+@AllArgsConstructor
+@NoArgsConstructor
+public class PaymentCompleted {
+    private String correlationId;
 }

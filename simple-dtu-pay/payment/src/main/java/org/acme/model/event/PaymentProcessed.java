@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public abstract class PaymentProcessed {
+public class PaymentProcessed {
     private String correlationId;
 }

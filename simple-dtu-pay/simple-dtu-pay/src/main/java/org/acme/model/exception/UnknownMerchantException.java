@@ -1,9 +1,12 @@
 package org.acme.model.exception;
 
-public class UnknownMerchantException extends Exception {
-    public final String id;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-    public UnknownMerchantException(String id) {
-        this.id = id;
-    }
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public class UnknownMerchantException extends Exception {
+    private String id;
 }

@@ -38,6 +38,6 @@ public class MerchantResource {
 
     @ServerExceptionMapper
     public RestResponse<String> mapException(TimeoutException x) {
-        return RestResponse.status(Response.Status.INTERNAL_SERVER_ERROR, "Timeout, the request took too long");
+        return RestResponse.status(Response.Status.INTERNAL_SERVER_ERROR, x.getMessage());
     }
 }

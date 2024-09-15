@@ -40,4 +40,9 @@ public class CustomerResource {
     public RestResponse<String> mapException(TimeoutException x) {
         return RestResponse.status(Response.Status.INTERNAL_SERVER_ERROR, x.getMessage());
     }
+
+    @ServerExceptionMapper
+    public RestResponse<String> mapException(Throwable x) {
+        return RestResponse.status(Response.Status.INTERNAL_SERVER_ERROR);
+    }
 }

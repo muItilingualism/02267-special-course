@@ -16,9 +16,8 @@ public class BankAccountValidationHandler {
 
     @Incoming("bank-account-validated")
     public void handle(JsonObject jsonEvent) {
-        BankAccountValidationCompleted event = jsonEvent.mapTo(BankAccountValidationCompleted.class);
-        Log.fatal("received bankaccountvalidationcompleted event!: " + event.getCorrelationId() + " " + event.isValid());
-        
+        BankAccountValidationCompleted event = jsonEvent.mapTo(BankAccountValidationCompleted.class);        
+        //FIXME received event.isvalid is always false?????????
         processor.process(event.getCorrelationId(), true);
     }
 }

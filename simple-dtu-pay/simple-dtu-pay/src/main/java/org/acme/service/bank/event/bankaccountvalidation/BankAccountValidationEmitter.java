@@ -4,6 +4,7 @@ import org.acme.model.event.BankAccountValidationCompleted;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 
+import io.quarkus.logging.Log;
 import io.smallrye.reactive.messaging.annotations.Broadcast;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -19,5 +20,6 @@ public class BankAccountValidationEmitter {
     public void emit(String correlationId, Boolean isValid) {
         BankAccountValidationCompleted resultEvent = new BankAccountValidationCompleted(correlationId, isValid);
         validationResultEmitter.send(resultEvent);
+        Log.fatal("EMIT: Bank account validated: " + correlationId + " isvalid: " + resultEvent.isValid());
     }
 }

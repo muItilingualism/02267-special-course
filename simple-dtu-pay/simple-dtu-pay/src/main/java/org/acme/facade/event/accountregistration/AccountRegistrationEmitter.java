@@ -1,8 +1,10 @@
 package org.acme.facade.event.accountregistration;
 
+import java.time.Duration;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeoutException;
 
 import org.acme.model.AccountRegistrationRequest;
 import org.acme.model.event.CustomerAccountRegistrationRequested;

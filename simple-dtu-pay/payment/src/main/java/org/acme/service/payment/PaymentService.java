@@ -20,6 +20,7 @@ import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
 
+import io.vertx.core.json.JsonObject;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.smallrye.reactive.messaging.annotations.Blocking;
@@ -42,20 +43,36 @@ public class PaymentService {
 
     @Inject
     @Broadcast
-    @Channel("payment-processed")
-    Emitter<PaymentProcessed> paymentProcessedEmitter;
+    @Channel("payment-completed")
+    Emitter<PaymentCompleted> paymentCompletedEmitter;
+
+    @Inject
+    @Broadcast
+    @Channel("payment-failed")
+    Emitter<PaymentFailed> paymentFailedEmitter;
 
     @Incoming("payment-requested")
     @Blocking
-    public void onPaymentRequested(PaymentRequested event) {
+    public void onPaymentRequested(JsonObject jsonEvent) {
+        PaymentRequested event = jsonEvent.mapTo(PaymentRequested.class);
         this.processPayment(event)
                 .subscribe().with(
-                        paymentProcessed -> emitPaymentProcessed(paymentProcessed),
+                        paymentProcessed -> {
+                            if (paymentProcessed instanceof PaymentCompleted) {
+                                emitPaymentProcessed((PaymentCompleted) paymentProcessed);
+                            } else if (paymentProcessed instanceof PaymentFailed) {
+                                emitPaymentProcessed((PaymentFailed) paymentProcessed);
+                            }
+                        },
                         failure -> emitPaymentProcessed(new PaymentFailed(event.getCorrelationId(), failure)));
     }
 
-    public void emitPaymentProcessed(PaymentProcessed paymentProcessed) {
-        paymentProcessedEmitter.send(paymentProcessed);
+    public void emitPaymentProcessed(PaymentCompleted paymentCompleted) {
+        paymentCompletedEmitter.send(paymentCompleted);
+    }
+
+    public void emitPaymentProcessed(PaymentFailed paymentFailed) {
+        paymentFailedEmitter.send(paymentFailed);
     }
 
     public Uni<PaymentProcessed> processPayment(PaymentRequested event) {
@@ -89,18 +106,24 @@ public class PaymentService {
                                     request.getAmount(), customerId, merchantId));
 
                     return Uni.createFrom().item(payment)
-                        .runSubscriptionOn(Infrastructure.getDefaultWorkerPool())
-                        .onItem().invoke(() -> bankService.transferMoney(payment))
-                        .replaceWith((PaymentProcessed) new PaymentCompleted(event.getCorrelationId()));
+                            .runSubscriptionOn(Infrastructure.getDefaultWorkerPool())
+                            .onItem().invoke(() -> bankService.transferMoney(payment))
+                            .replaceWith((PaymentProcessed) new PaymentCompleted(event.getCorrelationId()));
                 })
-                .onFailure().recoverWithItem(e -> new PaymentFailed(event.getCorrelationId(), e));
+                .onFailure(UnknownCustomerException.class).recoverWithItem(e -> 
+                    new PaymentFailed(event.getCorrelationId(), e))
+                .onFailure(UnknownMerchantException.class).recoverWithItem(e -> 
+                    new PaymentFailed(event.getCorrelationId(), e))
+                .onFailure().recoverWithItem(e -> 
+                    new PaymentFailed(event.getCorrelationId(), e));
     }
 
     @Incoming("all-payments-requested")
     @Broadcast
     @Outgoing("all-payments-assembled")
     @Blocking
-    public AllPaymentsAssembled getAllPayments(AllPaymentsRequested event) {
+    public AllPaymentsAssembled getAllPayments(JsonObject jsonEvent) {
+        AllPaymentsRequested event = jsonEvent.mapTo(AllPaymentsRequested.class);
         return new AllPaymentsAssembled(event.getCorrelationId(), new ArrayList<>(paymentsRequests));
     }
 }

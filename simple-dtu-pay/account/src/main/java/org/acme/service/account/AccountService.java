@@ -59,10 +59,8 @@ public class AccountService {
         return validationEmitter.emit(account.getBankAccountId())
                 .onItem().transformToUni(isValid -> {
                     if (!isValid) {
-                        Log.fatal("not valid! nooo: " + isValid);
                         return Uni.createFrom().failure(new UnknownBankAccountIdException(account.getBankAccountId()));
                     }
-                    Log.fatal("valid wooo!");
 
                     String id = generateAccountId();
                     registerAccount(new Customer(id, account.getFirstName(), account.getLastName(), account.getCpr(),
@@ -74,7 +72,6 @@ public class AccountService {
                     return Uni.createFrom().voidItem();
                 })
                 .onFailure().recoverWithItem(e -> {
-                    Log.fatalf("failed! uhooooh %s", e.getMessage());
                     customerFailEmitter.send(new CustomerAccountRegistrationFailed(event.getCorrelationId(), e));
                     return null;
                 })

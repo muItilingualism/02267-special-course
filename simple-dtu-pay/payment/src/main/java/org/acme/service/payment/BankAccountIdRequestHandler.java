@@ -59,6 +59,4 @@ public class BankAccountIdRequestHandler {
             Log.error("Received unknown or already removed correlationId: " + correlationId);
         }
     }
-
-
 }

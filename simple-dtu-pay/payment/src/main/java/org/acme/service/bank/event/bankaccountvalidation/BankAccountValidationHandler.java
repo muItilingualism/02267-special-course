@@ -3,7 +3,6 @@ package org.acme.service.bank.event.bankaccountvalidation;
 import org.acme.model.event.BankAccountValidationRequested;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 
-import io.quarkus.logging.Log;
 import io.smallrye.reactive.messaging.annotations.Blocking;
 import io.vertx.core.json.JsonObject;
 import jakarta.enterprise.context.ApplicationScoped;

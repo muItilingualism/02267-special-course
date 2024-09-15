@@ -18,7 +18,6 @@ import io.smallrye.reactive.messaging.annotations.Broadcast;
 import io.vertx.core.json.JsonObject;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import io.quarkus.logging.Log;
 
 @ApplicationScoped
 public class BankAccountIdRequestHandler {

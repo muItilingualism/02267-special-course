@@ -2,7 +2,10 @@ package org.acme.facade.event.accountregistration;
 
 import java.util.concurrent.CompletableFuture;
 
-import org.acme.model.event.AccountRegistrationProcessed;
+import org.acme.model.event.CustomerAccountRegistrationCompleted;
+import org.acme.model.event.CustomerAccountRegistrationFailed;
+import org.acme.model.event.MerchantAccountRegistrationCompleted;
+import org.acme.model.event.MerchantAccountRegistrationFailed;
 
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -14,22 +17,47 @@ public class AccountRegistrationProcessor {
     @Inject
     AccountRegistrationEmitter emitter;
 
-    public void processAccountRegistrationProcessed(AccountRegistrationProcessed event) {
+    public void processCustomerAccountRegistrationCompleted(CustomerAccountRegistrationCompleted event) {
         CompletableFuture<String> future = this.emitter.remove(event.getCorrelationId());
         if (future == null) {
             Log.warn("Received unknown or already removed account-registration-processed correlationId: "
                     + event.getCorrelationId());
             return;
         }
+        event.completeFuture(future);
+        Log.fatal("completed future1");
+    }
 
-        try {
-            event.completeFuture(future);
-        } catch (Exception e) {
-            Log.warnf("Received unhandled AccountRegistrationProcessed event %s with correlationId: %s",
-                    event.getClass(),
-                    event.getCorrelationId());
-            future.completeExceptionally(
-                    new IllegalStateException("Received unhandled AccountRegistrationProcessed event", e));
+    public void processCustomerAccountRegistrationFailed(CustomerAccountRegistrationFailed event) {
+        CompletableFuture<String> future = this.emitter.remove(event.getCorrelationId());
+        if (future == null) {
+            Log.warn("Received unknown or already removed account-registration-processed correlationId: "
+                    + event.getCorrelationId());
+            return;
         }
+        event.completeFuture(future);
+        Log.fatal("completed future2");
+    }
+
+    public void processMerchantAccountRegistrationCompleted(MerchantAccountRegistrationCompleted event) {
+        CompletableFuture<String> future = this.emitter.remove(event.getCorrelationId());
+        if (future == null) {
+            Log.warn("Received unknown or already removed account-registration-processed correlationId: "
+                    + event.getCorrelationId());
+            return;
+        }
+        event.completeFuture(future);
+        Log.fatal("completed future3");
+    }
+
+    public void processMerchantAccountRegistrationFailed(MerchantAccountRegistrationFailed event) {
+        CompletableFuture<String> future = this.emitter.remove(event.getCorrelationId());
+        if (future == null) {
+            Log.warn("Received unknown or already removed account-registration-processed correlationId: "
+                    + event.getCorrelationId());
+            return;
+        }
+        event.completeFuture(future);
+        Log.fatal("completed future4");
     }
 }

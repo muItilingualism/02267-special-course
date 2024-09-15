@@ -1,9 +1,13 @@
 package org.acme.facade.event.accountregistration;
 
-import org.acme.model.event.AccountRegistrationProcessed;
+import org.acme.model.event.CustomerAccountRegistrationCompleted;
+import org.acme.model.event.CustomerAccountRegistrationFailed;
+import org.acme.model.event.MerchantAccountRegistrationCompleted;
+import org.acme.model.event.MerchantAccountRegistrationFailed;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 
-import io.smallrye.reactive.messaging.annotations.Merge;
+import io.quarkus.logging.Log;
+import io.vertx.core.json.JsonObject;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -13,9 +17,37 @@ public class AccountRegistrationHandler {
     @Inject
     AccountRegistrationProcessor processor;
 
-    @Merge
-    @Incoming("account-registration-processed")
-    public void handleAccountRegistrationProcessed(AccountRegistrationProcessed event) {
-        this.processor.processAccountRegistrationProcessed(event);
-    }   
+    @Incoming("customer-account-registration-completed")
+    public void handleCustomerAccountRegistrationCompleted(JsonObject jsonEvent) {
+        Log.fatal("CUSTOMER COMPLETED");
+
+        CustomerAccountRegistrationCompleted event = jsonEvent.mapTo(CustomerAccountRegistrationCompleted.class);
+
+        this.processor.processCustomerAccountRegistrationCompleted(event);
+    }  
+    
+    @Incoming("customer-account-registration-failed")
+    public void handleCustomerAccountRegistrationFailed(JsonObject jsonEvent) {
+        Log.fatal("CUSTOMER FAILED");
+
+        CustomerAccountRegistrationFailed event = jsonEvent.mapTo(CustomerAccountRegistrationFailed.class);
+        this.processor.processCustomerAccountRegistrationFailed(event);
+    }  
+
+    @Incoming("merchant-account-registration-completed")
+    public void handleMerchantAccountRegistrationCompleted(JsonObject jsonEvent) {
+        Log.fatal("MERCHANT COMPLETED");
+
+        MerchantAccountRegistrationCompleted event = jsonEvent.mapTo(MerchantAccountRegistrationCompleted.class);
+
+        this.processor.processMerchantAccountRegistrationCompleted(event);
+    }  
+    
+    @Incoming("merchant-account-registration-failed")
+    public void handleMerchantAccountRegistrationFailed(JsonObject jsonEvent) {
+        Log.fatal("MERCHANT FAILED");
+
+        MerchantAccountRegistrationFailed event = jsonEvent.mapTo(MerchantAccountRegistrationFailed.class);
+        this.processor.processMerchantAccountRegistrationFailed(event);
+    }  
 }

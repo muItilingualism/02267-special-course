@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>7</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>336</x>
+      <y>721</y>
+      <w>420</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>org.acme.facade.resource::CustomerResource
+--
+~dtuPayFacade: SimpleDTUPayFacade
+--
++registerCustomerAccount(AccountRegistrationRequest account): Uni&lt;Response&gt;
++mapException(UnknownBankAccountIdException x): RestResponse&lt;String&gt;
++mapException(TimeoutException x): RestResponse&lt;String&gt;
++mapException(Throwable x): RestResponse&lt;String&gt;
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>938</x>
+      <y>728</y>
+      <w>420</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>org.acme.facade.resource::MerchantResource
+--
+~dtuPayFacade: SimpleDTUPayFacade
+--
++registerMerchantAccount(AccountRegistrationRequest account): Uni&lt;Response&gt;
++mapException(UnknownBankAccountIdException x): RestResponse&lt;String&gt;
++mapException(TimeoutException x): RestResponse&lt;String&gt;
++mapException(Throwable x): RestResponse&lt;String&gt;
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>637</x>
+      <y>840</y>
+      <w>371</w>
+      <h>133</h>
+    </coordinates>
+    <panel_attributes>org.acme.facade.resource::PaymentResource
+--
+~dtuPayFacade: SimpleDTUPayFacade
+--
++payment(PaymentRequest paymentRequest): Uni&lt;Response&gt;
++list(): Uni&lt;Response&gt;
++mapException(MoneyTransferException x): RestResponse&lt;String&gt;
++mapException(UnknownCustomerException x): RestResponse&lt;String&gt;
++mapException(UnknownMerchantException x): RestResponse&lt;String&gt;
++mapException(TimeoutException x): RestResponse&lt;String&gt;
++mapException(Throwable x): RestResponse&lt;String&gt;
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>581</x>
+      <y>539</y>
+      <w>462</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>org.acme.facade::SimpleDTUPayFacade
+--
+~accountRegistrationEmitter: AccountRegistrationEmitter
+~paymentEmitter: PaymentEmitter
+--
++processPayment(PaymentRequest paymentRequest): Uni&lt;Void&gt;
++getAllPayments(): Uni&lt;List&lt;PaymentRequest&gt;&gt;
++processCustomerAccountRegistration(AccountRegistrationRequest account): Uni&lt;String&gt;
++processMerchantAccountRegistration(AccountRegistrationRequest account): Uni&lt;String&gt;
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>882</x>
+      <y>336</y>
+      <w>602</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>org.acme.facade.event.accountregistration::AccountRegistrationEmitter
+--
+~customerAccountRegistrationEmitter: Emitter&lt;CustomerAccountRegistrationRequested&gt;
+~merchantAccountRegistrationEmitter: Emitter&lt;MerchantAccountRegistrationRequested&gt;
+-pendingAccountRegistrations = new ConcurrentHashMap(): ConcurrentHashMap&lt;String, CompletableFuture&lt;String&gt;&gt;
+--
++emitProcessCustomerAcountRegistration(AccountRegistrationRequest account): Uni&lt;String&gt;
++emitProcessMerchantAccountRegistration(AccountRegistrationRequest account): Uni&lt;String&gt;
++remove(String correlationId): CompletableFuture&lt;String&gt;
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>980</x>
+      <y>0</y>
+      <w>392</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>org.acme.facade.event.accountregistration::AccountRegistrationHandler
+--
+~processor: AccountRegistrationProcessor
+--
++handleCustomerAccountRegistrationCompleted(JsonObject jsonEvent): void
++handleCustomerAccountRegistrationFailed(JsonObject jsonEvent): void
++handleMerchantAccountRegistrationCompleted(JsonObject jsonEvent): void
++handleMerchantAccountRegistrationFailed(JsonObject jsonEvent): void
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>917</x>
+      <y>154</y>
+      <w>525</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>org.acme.facade.event.accountregistration::AccountRegistrationProcessor
+--
+~emitter: AccountRegistrationEmitter
+--
++processCustomerAccountRegistrationCompleted(CustomerAccountRegistrationCompleted event): void
++processCustomerAccountRegistrationFailed(CustomerAccountRegistrationFailed event): void
++processMerchantAccountRegistrationCompleted(MerchantAccountRegistrationCompleted event): void
++processMerchantAccountRegistrationFailed(MerchantAccountRegistrationFailed event): void
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>140</x>
+      <y>322</y>
+      <w>693</w>
+      <h>133</h>
+    </coordinates>
+    <panel_attributes>org.acme.facade.event.payment::PaymentEmitter
+--
+~paymentRequestedEmitter: Emitter&lt;PaymentRequested&gt;
+-pendingProcessPaymentRequests = new ConcurrentHashMap(): ConcurrentHashMap&lt;String, CompletableFuture&lt;Void&gt;&gt;
+~allPaymentsRequestedEmitter: Emitter&lt;AllPaymentsRequested&gt;
+-pendingAllPaymentsRequests = new ConcurrentHashMap(): ConcurrentHashMap&lt;String, CompletableFuture&lt;List&lt;PaymentRequest&gt;&gt;&gt;
+--
++emitProcessPaymentRequest(PaymentRequest request): Uni&lt;Void&gt;
++removeProcessPaymentRequest(String correlationId): CompletableFuture&lt;Void&gt;
++emitGetAllPaymentsRequest(): Uni&lt;List&lt;PaymentRequest&gt;&gt;
++removeAllPaymentsRequest(String correlationId): CompletableFuture&lt;List&lt;PaymentRequest&gt;&gt;
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>364</x>
+      <y>7</y>
+      <w>308</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>org.acme.facade.event.payment::PaymentHandler
+--
+~processor: PaymentProcessor
+--
++handlePaymentCompleted(JsonObject jsonEvent): void
++handlePaymentProcessed(JsonObject jsonEvent): void
++handleAllPaymentsAssembled(JsonObject jsonEvent): void
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>336</x>
+      <y>147</y>
+      <w>350</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>org.acme.facade.event.payment::PaymentProcessor
+--
+~emitter: PaymentEmitter
+--
++processAllPaymentsAssembled(AllPaymentsAssembled event): void
++processPaymentCompleted(PaymentCompleted event): void
++processPaymentFailed(PaymentFailed event): void
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>546</x>
+      <y>644</y>
+      <w>231</w>
+      <h>91</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;use&gt;&gt;</panel_attributes>
+    <additional_attributes>310.0;10.0;10.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>826</x>
+      <y>644</y>
+      <w>49</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;use&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;280.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>924</x>
+      <y>644</y>
+      <w>217</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;use&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;290.0;120.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>567</x>
+      <y>448</y>
+      <w>189</w>
+      <h>105</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;use&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;250.0;130.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>910</x>
+      <y>441</y>
+      <w>154</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;use&gt;&gt;</panel_attributes>
+    <additional_attributes>200.0;10.0;10.0;140.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1183</x>
+      <y>245</y>
+      <w>49</w>
+      <h>105</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;use&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;130.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1190</x>
+      <y>91</y>
+      <w>49</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;use&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>511</x>
+      <y>84</y>
+      <w>49</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;use&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>504</x>
+      <y>224</y>
+      <w>49</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;use&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;140.0;10.0;10.0</additional_attributes>
+  </element>
+</diagram>

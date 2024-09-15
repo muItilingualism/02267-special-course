@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>8</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>672</x>
+      <y>144</y>
+      <w>472</w>
+      <h>192</h>
+    </coordinates>
+    <panel_attributes>org.acme.service.account::AccountService
+--
+-registeredAccounts = new ArrayList(): List&lt;Account&gt;
+~validationEmitter: BankAccountValidationEmitter
+~customerCompleteEmitter: Emitter&lt;CustomerAccountRegistrationCompleted&gt;
+~customerFailEmitter: Emitter&lt;CustomerAccountRegistrationFailed&gt;
+~merchantCompleteEmitter: Emitter&lt;MerchantAccountRegistrationCompleted&gt;
+~merchantFailEmitter: Emitter&lt;MerchantAccountRegistrationFailed&gt;
+--
++processCustomerAccountRegistration(JsonObject jsonEvent): Uni&lt;Void&gt;
++processMerchantAccountRegistration(JsonObject jsonEvent): Uni&lt;Void&gt;
+-generateAccountId(): String
+-registerAccount(Account account): void
++getAccountBankId(String accountId): Optional&lt;String&gt;
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>768</x>
+      <y>456</y>
+      <w>160</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>/org.acme.model::Account/
+--
+#id: String
+#firstName: String
+#lastName: String
+#cpr: String
+#bankAccountId: String
+--
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>832</x>
+      <y>328</y>
+      <w>64</w>
+      <h>144</h>
+    </coordinates>
+    <panel_attributes>lt=-
+
+m1=*
+
+m2=1
+m1pos=10,0
+r2pos=-13,-4
+records</panel_attributes>
+    <additional_attributes>10.0;160.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>592</x>
+      <y>656</y>
+      <w>216</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>org.acme.model::Customer
+--
+--
++Customer(...)
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>880</x>
+      <y>656</y>
+      <w>184</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>org.acme.model::Merchant
+--
+--
++Merchant(...)
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>840</x>
+      <y>560</y>
+      <w>152</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0;170.0;70.0;170.0;120.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>688</x>
+      <y>560</y>
+      <w>176</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>200.0;10.0;200.0;70.0;10.0;70.0;10.0;120.0</additional_attributes>
+  </element>
+</diagram>
